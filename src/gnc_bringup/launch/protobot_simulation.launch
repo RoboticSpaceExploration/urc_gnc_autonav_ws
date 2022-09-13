@@ -1,0 +1,6 @@
+<launch>
+	<include file="$(find gnc_bringup)/launch/protobot_core.launch"/>
+	<include file="$(find gnc_gazebo)/launch/protobot_gazebo.launch"/>
+	<include file="$(find gnc_description)/launch/protobot_rviz.launch"/>
+	<include file="$(find gnc_planner)/launch/move_base.launch"/>
+</launch>

@@ -1,0 +1,3 @@
+<launch>
+    <include file="$(find gnc_description)/launch/protobot_rviz.launch"/>
+</launch>
