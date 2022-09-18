@@ -28,6 +28,7 @@
        <!--<arg name="world_name" value=""/>-->
     </include>
 
+    <param name="robot_description" command="$(find xacro)/xacro.py $(find gnc_description)/urdf/protobot.urdf.xacro" />
     <!-- Spawn the vehicle. -->
     <node name="spawn_vehicle" pkg="gazebo_ros" type="spawn_model"
           args="-urdf -param robot_description -model protobot
