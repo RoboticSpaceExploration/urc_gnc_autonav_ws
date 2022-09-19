@@ -4,7 +4,7 @@
 
   <!-- load model into parameter server -->
 
-    <param name="robot_description" command="$(find xacro)/xacro '$(find gnc_description)/urdf/protobot.urdf.xacro'"/>
+    <param name="robot_description" command="$(find xacro)/xacro '$(find gnc_description)/urdf/gnc_robot.xacro'"/>
     
     <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
     

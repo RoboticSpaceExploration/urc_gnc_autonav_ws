@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="protobot">
     <!-- Includes files to build the robot -->
-    <xacro:include filename="Base.urdf.xacro" />
-    <xacro:include filename="Wheel.urdf.xacro" />
+    <xacro:include filename="Base.xacro" />
+    <xacro:include filename="Wheel.xacro" />
     <xacro:include filename="material.xacro" />
 
     <!-- Wheel Origin Values -->

@@ -1,4 +1,0 @@
-<launch>
-	<include file="$(find gnc_hardware)/launch/protobot_hardware.launch"/>
-	<include file="$(find gnc_bringup)/launch/protobot_core.launch"/>
-</launch>

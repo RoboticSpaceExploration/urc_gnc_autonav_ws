@@ -3,7 +3,7 @@
 <launch>
     <!-- robot_description is used by nodes that publish to joint_states. -->
     <param name="robot_description"
-           command="$(find xacro)/xacro $(find gnc_description)/urdf/protobot.urdf.xacro"/>
+           command="$(find xacro)/xacro $(find gnc_description)/urdf/gnc_robot.xacro"/>
     <!-- Read joint positions from joint_states, then publish the vehicle's
          state to tf. -->
     
