@@ -14,14 +14,14 @@
     <xacro:macro name="wheel" params="name parentLink mass WheelXOrigin WheelYOrigin">
         <link name="${name}_link">
             <visual>
-                <origin xyz="${originWheelX} ${originWheelY} ${originWheelZ}" rpy="0 ${pi/2} 0"/>
+                <origin xyz="${originWheelX} ${originWheelY} ${originWheelZ}" rpy="${pi/2} 0 0"/>
                 <geometry>
                     <cylinder length="${wheelLength}" radius="${wheelRadius}"/>
                 </geometry>
                 <material name="${wheelColor}"/>
             </visual>
             <collision>
-                <origin xyz="${originWheelX} ${originWheelY} ${originWheelZ}" rpy="0 ${pi/2} 0"/>
+                <origin xyz="${originWheelX} ${originWheelY} ${originWheelZ}" rpy="${pi/2} 0 0"/>
                 <geometry>
                     <cylinder length="${wheelLength}" radius="${wheelRadius}"/>
                 </geometry>
@@ -35,7 +35,7 @@
         </link>
 
         <joint name="${name}_joint" type="continuous">
-            <origin xyz="${WheelXOrigin} ${WheelYOrigin} 0" rpy="0 0 0"/>
+            <origin xyz="${WheelXOrigin} ${WheelYOrigin} 0" rpy="0 ${pi/2} 0"/>
             <parent link="${parentLink}"/>
             <child link="${name}_link"/> 
             <axis xyz="0 1 0" />
