@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="protobot">
+    <!-- Includes files to build the robot -->
+    <xacro:include filename="Base.xacro" />
+    <xacro:include filename="Wheel.xacro" />
+    <xacro:include filename="material.xacro" />
+
+    <!-- Wheel Origin Values -->
+    <xacro:property name="LeftWheelXOrigin" value="-.23"/>
+    <xacro:property name="RightWheelXOrigin" value=".23"/>
+
+    <xacro:property name="BackWheelYOrigin" value="-.2"/>
+    <xacro:property name="MiddleWheelYOrigin" value="0"/>
+    <xacro:property name="FrontWheelYOrigin" value=".2"/>
+
+    <xacro:property name="wheelMass" value="1"/>
+
+    <xacro:property name="baseMass" value="1"/>
+
+    <!-- Base of the robot -->
+    <xacro:base name="base" mass="${baseMass}"/>
+
+    <!-- Left Side of the wheels -->
+    <xacro:wheel name="wheel_Left_Front"  mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${FrontWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Left_Middle" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${MiddleWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Left_Back" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${BackWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
+
+    <!-- Right Side of the wheels -->
+    <xacro:wheel name="wheel_Right_Front" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${FrontWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Right_Middle" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${MiddleWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Right_Back" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${BackWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
+
+    <!-- Gazebo code for protobot -->
+    <gazebo>
+        <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
+        </plugin>
+    </gazebo>
+    <gazebo>
+        <plugin name="gazebo_ros_joint_state_publisher"
+            filename="libgazebo_ros_joint_state_publisher.so">
+            <update_rate>20</update_rate>
+            <joint_name>wheel_Left_Front_joint</joint_name>
+            <joint_name>wheel_Left_Middle_joint</joint_name>
+            <joint_name>wheel_Left_Back_joint</joint_name>
+            <joint_name>wheel_Right_Front_joint</joint_name>
+            <joint_name>wheel_Right_Middle_joint</joint_name>
+            <joint_name>wheel_Right_Back_joint</joint_name>
+        </plugin>
+    </gazebo>
+    <gazebo>
+        <plugin name="gazebo_ros_joint_pose_trajectory"
+            filename="libgazebo_ros_joint_pose_trajectory.so">
+            <update_rate>2</update_rate>
+        </plugin>
+    </gazebo>
+
+</robot>

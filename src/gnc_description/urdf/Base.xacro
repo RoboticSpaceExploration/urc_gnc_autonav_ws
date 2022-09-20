@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="base">
+    <!-- This is values for the base of the robot -->
+    <xacro:property name="baseLength" value="0.5" />
+    <xacro:property name="baseWidth" value="0.4" />
+    <xacro:property name="baseHeight" value="0.1" />
+
+    <xacro:property name="originBaseX" value="0" />
+    <xacro:property name="originBaseY" value="0" />
+    <xacro:property name="originBaseZ" value="0" />
+
+    <xacro:property name="baseColor" value="White" />
+
+    <xacro:macro name="base" params="name mass">
+        <link name="${name}_link">
+            <visual>
+                <origin xyz="${originBaseX} ${originBaseY} ${originBaseZ}" rpy="0 0 0"/>
+                <geometry>
+                    <box size="${baseLength} ${baseWidth} ${baseHeight}" />
+                </geometry>
+                <material name="${baseColor}"/>
+            </visual>
+            <collision>
+                <origin xyz="${originBaseX} ${originBaseY} ${originBaseZ}" rpy="0 0 0"/>
+                <geometry>
+                    <box size="${baseLength} ${baseWidth} ${baseHeight}" />
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="${mass}"/>
+                <inertia  ixx="${mass*(baseLength*baseLength+baseHeight*baseHeight)/12}" ixy = "0" ixz = "0"
+                iyy="${mass*(baseWidth*baseWidth+baseHeight*baseHeight)/12}" iyz = "0"
+                izz="${mass*(baseWidth*baseWidth+baseHeight*baseHeight)/12}"/> 
+            </inertial>
+        </link>
+
+        <!-- Commands for the Base in Gazebo-->
+
+        <gazebo reference="${name}_link">
+            <material>Gazebo/White</material>
+        </gazebo>
+    </xacro:macro>
+</robot>
