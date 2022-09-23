@@ -33,6 +33,7 @@
     <!-- Gazebo code for protobot -->
     <gazebo>
         <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
+        <robotNamespace>gnc_robot</robotNamespace>
         </plugin>
     </gazebo>
     <gazebo>
