@@ -30,6 +30,20 @@
     <xacro:wheel name="wheel_Right_Middle" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${MiddleWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
     <xacro:wheel name="wheel_Right_Back" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${BackWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
 
+    <!-- Camera -->
+
+    <xacro:include filename="_d435i.xacro" />
+    <xacro:include filename="_T265.xacro"/>
+    <xacro:arg name="use_nominal_extrinsics" default="True" />
+
+    <xacro:realsense_d435 sensor_name="camera" parent_link="base_link" rate="30.0">
+        <origin xyz="0.20 0 0.15" rpy="0 0 0"/>
+    </xacro:realsense_d435>
+
+    <xacro:realsense_T265 sensor_name="camera_z" parent_link="base_link" rate="30.0">
+        <origin rpy="0 0 0" xyz="0 0 0.25"/>
+    </xacro:realsense_T265>
+
     <!-- Gazebo code for protobot -->
     <gazebo>
         <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
