@@ -7,6 +7,7 @@ project(gnc_control)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+<<<<<<< HEAD
 find_package(catkin REQUIRED COMPONENTS
   controller_manager
   controller_manager_msgs
@@ -18,6 +19,9 @@ find_package(catkin REQUIRED COMPONENTS
   hardware_interface
   tf
 )
+=======
+find_package(catkin REQUIRED)
+>>>>>>> 96dfc3a3ec67a364aa69b8c6587562832815f377
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -109,12 +113,18 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
+<<<<<<< HEAD
  INCLUDE_DIRS include
 #  LIBRARIES gnc_control
   CATKIN_DEPENDS 
     controller_manager 
     roscpp 
     hardware_interface
+=======
+#  INCLUDE_DIRS include
+#  LIBRARIES gnc_control
+#  CATKIN_DEPENDS other_catkin_pkg
+>>>>>>> 96dfc3a3ec67a364aa69b8c6587562832815f377
 #  DEPENDS system_lib
 )
 
@@ -125,9 +135,14 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
+<<<<<<< HEAD
 include
   ${catkin_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
+=======
+# include
+# ${catkin_INCLUDE_DIRS}
+>>>>>>> 96dfc3a3ec67a364aa69b8c6587562832815f377
 )
 
 ## Declare a C++ library
@@ -145,6 +160,7 @@ include
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/gnc_control_node.cpp)
 
+<<<<<<< HEAD
 # add_executable(single_joint_hardware_interface src/robot_hardware_interface.cpp)
 # # add_dependencies(robot_hardware_interface ${catkin_EXPORTED_TARGETS})
 # target_link_libraries(single_joint_hardware_interface ${catkin_LIBRARIES})
@@ -153,6 +169,8 @@ add_executable(robot_hardware_interface src/robot_hardware_interface.cpp src/rob
 target_link_libraries(robot_hardware_interface ${catkin_LIBRARIES})
 link_directories(${catkin_LIBRARY_DIRS})
 
+=======
+>>>>>>> 96dfc3a3ec67a364aa69b8c6587562832815f377
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use

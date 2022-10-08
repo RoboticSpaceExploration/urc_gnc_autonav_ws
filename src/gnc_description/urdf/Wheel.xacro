@@ -3,7 +3,7 @@
 
     <!-- This is values for the Wheels of the robot -->
     <xacro:property name="wheelLength" value="0.05" />
-    <xacro:property name="wheelRadius" value="0.09" />
+    <xacro:property name="wheelRadius" value="0.1" />
 
     <xacro:property name="originWheelX" value="0"/>
     <xacro:property name="originWheelY" value="0"/>
