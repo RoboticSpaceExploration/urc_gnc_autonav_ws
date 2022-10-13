@@ -23,7 +23,7 @@ SOFTWARE. */
 #include <string>
 
 struct settings {
-    std::string serialPortAddr    = "/dev/ttyAMA0";
+    std::string serialPortAddr;
     std::string rightJoints[3];
     std::string leftJoints[3];
     int leftAddr[3]; // roboclaw addresses for the motors

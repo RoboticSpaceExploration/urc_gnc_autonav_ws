@@ -39,9 +39,9 @@ int main(int argc, char **argv)
     rb.SetupEncoders();
 
     while (ros::ok()) {
-        robot.writeToEncoders(&rb, &esMain);
+        robot.readFromWheels(&rb, &esMain);
         cm.update(robot.get_time(), robot.get_period());
-        robot.readFromEncoders(&rb, &esMain);
+        robot.writeToWheels(&rb, &esMain);
         rate.sleep();
     }
 
@@ -125,7 +125,7 @@ void RobotHardwareInterface::registerJointVelocityHandlers()
     registerInterface(&jnt_vel_interface);
 }
 
-void RobotHardwareInterface::readFromEncoders(roboclaw *rb, settings *es)
+void RobotHardwareInterface::writeToWheels(roboclaw *rb, settings *es)
 {
     if (es->debug_mode) {
         ROS_INFO_STREAM("READING JOINT STATES FROM ROS");
@@ -135,7 +135,7 @@ void RobotHardwareInterface::readFromEncoders(roboclaw *rb, settings *es)
     rb->SendCommandToWheels(cmd);
 }
 
-void RobotHardwareInterface::writeToEncoders(roboclaw *rb, settings *es)
+void RobotHardwareInterface::readFromWheels(roboclaw *rb, settings *es)
 {
     if (es->debug_mode) {
         rb->GetVelocityFromWheels(vel);

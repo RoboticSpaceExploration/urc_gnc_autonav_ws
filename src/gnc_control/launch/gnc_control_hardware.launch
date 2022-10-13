@@ -11,7 +11,8 @@
 		pkg="controller_manager"
 		type="spawner"  
 		output="screen"  
-		args="/gnc_robot/gnc_robot_velocity_controller 
-			/gnc_robot/gnc_robot_joint_publisher" 
-		ns="/" />
+		ns="/gnc_robot" 
+		args="gnc_robot_velocity_controller 
+			gnc_robot_joint_publisher" />
+
 </launch>

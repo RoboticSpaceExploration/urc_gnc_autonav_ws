@@ -450,7 +450,9 @@ void roboclaw::GetVelocityFromWheels(double* vel) {
     if (buf[4] == 1) vel[0] = -vel[0];
 }
 
-/* Scale command between 0-127 to be sent to encoders */
+/**
+ *  Scale command between 0-127 to be sent to encoders
+ */
 
 uint8_t roboclaw::ScaleCommand(double cmd) {
     double res = (fabs(cmd)/16.667)*es->max_m1m2_value;
