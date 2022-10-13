@@ -50,15 +50,15 @@ gnc_robot:
 
 
     #Publish all joint states -----------------------------------
-    #joint_state_controller:
-      #type: joint_state_controller/JointStateController
-      #publish_rate: 50  
+    # joint_state_controller:
+    #   type: joint_state_controller/JointStateController
+    #   publish_rate: 50  
 
-    #joint1_velocity_controller:
-      #type: velocity_controllers/JointVelocityController
-      #joint: right_rear_wheel_joint
-      #pid: {p: 100.0, i: 0.01, d: 0.1}
-    #joint2_velocity_controller:
-      #type: velocity_controllers/JointVelocityController
-      #joint: left_rear_wheel_joint
-      #pid: {p: 100.0, i: 0.01, d: 0.1}  
+    # joint1_velocity_controller:
+    #   type: velocity_controllers/JointVelocityController
+    #   joint: right_rear_wheel_joint
+    #   pid: {p: 100.0, i: 0.01, d: 0.1}
+    # joint2_velocity_controller:
+    #   type: velocity_controllers/JointVelocityController
+    #   joint: left_rear_wheel_joint
+    #   pid: {p: 100.0, i: 0.01, d: 0.1} 

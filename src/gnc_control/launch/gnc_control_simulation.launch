@@ -1,0 +1,11 @@
+<launch>
+
+	<rosparam command="load" file="$(find gnc_control)/config/control.yaml"/>
+	<node name="controller_manager_node" 
+		pkg="controller_manager"
+		type="spawner"  
+		output="screen"  
+		ns="/gnc_robot" 
+		args="gnc_robot_velocity_controller 
+			gnc_robot_joint_publisher" />
+</launch>
