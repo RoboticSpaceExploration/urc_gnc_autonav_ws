@@ -51,5 +51,9 @@ qtcreator-*
 # Catkin custom files
 CATKIN_IGNORE
 
+<<<<<<< HEAD
 # vscode folder
+=======
+# vscode
+>>>>>>> 2b0b8a218325d5e43ab09beda145dc88ee51aaa8
 .vscode
