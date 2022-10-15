@@ -14,5 +14,15 @@
 		ns="/gnc_robot" 
 		args="gnc_robot_velocity_controller 
 			gnc_robot_joint_publisher" />
+	
+	<!-- Launch 2 camera nodes for the T265 and d435i refer to realsense2-ros
+		documentation to check what other topics we need from the cameras-->
+    <include file="$(find realsense2_camera)/launch/rs_camera.launch"/>
+		<arg name="camera" value="Camera_d435i" />
+        <arg name="serial_no_camera1" value="TODO T265 SERIAL NUMBER HERE" />
+    <include file="$(find realsense2_camera)/launch/rs_camera.launch"/>
+		<arg name="camera" value="Camera_T265" />
+        <arg name="serial_no_camera1" value="TODO d435i SERIAL NUMBER HERE" />
+		
 
 </launch>
