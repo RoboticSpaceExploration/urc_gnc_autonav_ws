@@ -44,6 +44,7 @@
                 <topicName>gps/fix</topicName>
                 <frameId>${name}_link</frameId>
                 <gaussianNoise>0</gaussianNoise>
+                <alwayson>true</alwayson>
             </plugin>
             <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
                 <alwaysOn>true</alwaysOn>
