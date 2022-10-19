@@ -21,14 +21,14 @@
     <xacro:base name="base" mass="${baseMass}"/>
 
     <!-- Left Side of the wheels -->
-    <xacro:wheel name="wheel_Left_Front"  mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${FrontWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
-    <xacro:wheel name="wheel_Left_Middle" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${MiddleWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
-    <xacro:wheel name="wheel_Left_Back" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${BackWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Right_Front"  mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${FrontWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Right_Middle" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${MiddleWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Right_Back" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${BackWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
 
     <!-- Right Side of the wheels -->
-    <xacro:wheel name="wheel_Right_Front" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${FrontWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
-    <xacro:wheel name="wheel_Right_Middle" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${MiddleWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
-    <xacro:wheel name="wheel_Right_Back" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${BackWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Left_Front" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${FrontWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Left_Middle" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${MiddleWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Left_Back" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${BackWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
 
     <!-- Camera -->
 
