@@ -32,8 +32,8 @@
 
     <!-- Camera -->
 
-    <xacro:include filename="sensors/_d435i.xacro" />
-    <xacro:include filename="sensors/_T265.xacro"/>
+    <xacro:include filename="$(find gnc_gazebo)/sensors/_d435i.xacro" />
+    <xacro:include filename="$(find gnc_gazebo)/sensors/_T265.xacro"/>
     <xacro:arg name="use_nominal_extrinsics" default="True" />
 
     <xacro:realsense_d435 sensor_name="camera" parent_link="base_link" rate="30.0">
@@ -45,7 +45,7 @@
     </xacro:realsense_T265>
 
     <!-- IMU GPS -->
-        <xacro:include filename="sensors/_zedf9r.xacro"/>
+        <xacro:include filename="$(find gnc_gazebo)/sensors/_zedf9r.xacro"/>
         <xacro:Sparkfun_zedf9r name="zed_Sensor" parentLink="base_link">
             <origin rpy="0 0 0" xyz="0 0 0.15"/>
         </xacro:Sparkfun_zedf9r>
