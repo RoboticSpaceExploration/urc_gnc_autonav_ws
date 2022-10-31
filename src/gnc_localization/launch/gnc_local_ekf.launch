@@ -1,0 +1,19 @@
+<launch>
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_local"
+            clear_params="true" output="screen">
+        <param name="frequency" value="10"/>
+		<param name="sensor_timeout" value="0.1"/>
+	
+		<param name="publish_tf" value="true"/>
+		<param name="odom_frame" value="odom"/>
+		<param name="base_link_frame" value="base_link"/>
+		<param name="world_frame" value="odom"/> 
+		<param name="two_d_mode" value="true"/>
+		
+		<param name="odom0" value="camera_z/odom/sample"/>
+			
+		<rosparam param="odom0_config">[true, true, true, false, false, false, false, false, false, false, false, false, false, false, false]</rosparam>
+    </node>
+
+
+</launch>
