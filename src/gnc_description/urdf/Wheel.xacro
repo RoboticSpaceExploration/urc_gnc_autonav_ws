@@ -14,7 +14,7 @@
     <xacro:macro name="wheel" params="name parentLink mass WheelXOrigin WheelYOrigin">
         <link name="${name}_link">
             <visual>
-                <origin xyz="${originWheelX} ${originWheelY} ${originWheelZ}" rpy="0 0 ${pi/2}"/>
+                <origin xyz="${originWheelX} ${originWheelY} ${originWheelZ}" rpy="0 0 0"/>
                 <geometry>
                     <mesh filename="package://gnc_gazebo/mesh/wheel.stl"/>
                 </geometry>
