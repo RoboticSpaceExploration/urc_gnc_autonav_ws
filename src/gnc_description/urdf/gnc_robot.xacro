@@ -6,16 +6,16 @@
     <xacro:include filename="material.xacro" />
 
     <!-- Wheel Origin Values -->
-    <xacro:property name="LeftWheelXOrigin" value="-.23"/>
-    <xacro:property name="RightWheelXOrigin" value=".23"/>
+    <xacro:property name="LeftWheelXOrigin" value="-.32"/>
+    <xacro:property name="RightWheelXOrigin" value=".32"/>
 
-    <xacro:property name="BackWheelYOrigin" value="-.2"/>
+    <xacro:property name="BackWheelYOrigin" value="-.38"/>
     <xacro:property name="MiddleWheelYOrigin" value="0"/>
-    <xacro:property name="FrontWheelYOrigin" value=".2"/>
+    <xacro:property name="FrontWheelYOrigin" value=".38"/>
 
-    <xacro:property name="wheelMass" value="1"/>
+    <xacro:property name="wheelMass" value="0.7"/>
 
-    <xacro:property name="baseMass" value="1"/>
+    <xacro:property name="baseMass" value="20"/>
 
     <!-- Base of the robot -->
     <xacro:base name="base" mass="${baseMass}"/>
