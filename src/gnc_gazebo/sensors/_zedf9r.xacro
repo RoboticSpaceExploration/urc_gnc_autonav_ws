@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="sensor_zedf9r">
+
+    <xacro:property name="baseZedLength" value="0.0508" />
+    <xacro:property name="baseZedWidth" value="0.04318" />
+    <xacro:property name="baseZedHeight" value="0.0075" />
+    <xacro:property name="mass" value="1" />
+    <xacro:property name="baseZedColor" value="Red" />
+
+    <xacro:macro name="Sparkfun_zedf9r" params="name parentLink *origin">
+        <link name="${name}_link">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <box size="${baseZedLength} ${baseZedWidth} ${baseZedHeight}" />
+                </geometry>
+                <material name="${baseZedColor}"/>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <box size="${baseZedLength} ${baseZedWidth} ${baseZedHeight}" />
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="${mass}"/>
+                <inertia  ixx="${mass*(baseZedLength*baseZedLength+baseZedHeight*baseZedHeight)/12}" ixy = "0" ixz = "0"
+                iyy="${mass*(baseZedWidth*baseZedWidth+baseZedHeight*baseZedHeight)/12}" iyz = "0"
+                izz="${mass*(baseZedWidth*baseZedWidth+baseZedHeight*baseZedHeight)/12}"/> 
+            </inertial>
+        </link>
+
+        <joint name="${name}_joint" type="fixed">
+            <xacro:insert_block name="origin" />
+            <parent link="${parentLink}"/>
+            <child link="${name}_link"/> 
+            <axis xyz="0 1 0" />
+        </joint>
+
+        <gazebo>
+            <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
+                <updateRate>30.0</updateRate>
+                <bodyName>${name}_link</bodyName>
+                <topicName>gps/fix</topicName>
+                <frameId>${name}_link</frameId>
+                <gaussianNoise>0</gaussianNoise>
+                <alwayson>true</alwayson>
+            </plugin>
+            <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+                <alwaysOn>true</alwaysOn>
+                <bodyName>${name}_link</bodyName>
+                <topicName>imu/data</topicName>
+                <serviceName>imu_service</serviceName>
+                <gaussianNoise>0</gaussianNoise>
+                <updateRate>30.0</updateRate>
+            </plugin>
+        </gazebo>
+    </xacro:macro>
+
+</robot>
