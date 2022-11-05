@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="base">
     <!-- This is values for the base of the robot -->
-    <xacro:property name="baseLength" value="0.5" />
-    <xacro:property name="baseWidth" value="0.4" />
-    <xacro:property name="baseHeight" value="0.1" />
+    <xacro:property name="baseLength" value="0.86" />
+    <xacro:property name="baseWidth" value="0.67" />
+    <xacro:property name="baseHeight" value="0.53" />
 
     <xacro:property name="originBaseX" value="0" />
     <xacro:property name="originBaseY" value="0" />
@@ -16,9 +16,8 @@
             <visual>
                 <origin xyz="${originBaseX} ${originBaseY} ${originBaseZ}" rpy="0 0 0"/>
                 <geometry>
-                    <box size="${baseLength} ${baseWidth} ${baseHeight}" />
+                    <mesh filename="package://gnc_gazebo/mesh/chassis.stl"/>
                 </geometry>
-                <material name="${baseColor}"/>
             </visual>
             <collision>
                 <origin xyz="${originBaseX} ${originBaseY} ${originBaseZ}" rpy="0 0 0"/>

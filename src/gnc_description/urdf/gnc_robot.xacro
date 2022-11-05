@@ -6,29 +6,29 @@
     <xacro:include filename="material.xacro" />
 
     <!-- Wheel Origin Values -->
-    <xacro:property name="LeftWheelXOrigin" value="-.23"/>
-    <xacro:property name="RightWheelXOrigin" value=".23"/>
+    <xacro:property name="LeftWheelXOrigin" value="-.32"/>
+    <xacro:property name="RightWheelXOrigin" value=".32"/>
 
-    <xacro:property name="BackWheelYOrigin" value="-.2"/>
+    <xacro:property name="BackWheelYOrigin" value="-.38"/>
     <xacro:property name="MiddleWheelYOrigin" value="0"/>
-    <xacro:property name="FrontWheelYOrigin" value=".2"/>
+    <xacro:property name="FrontWheelYOrigin" value=".38"/>
 
-    <xacro:property name="wheelMass" value="1"/>
+    <xacro:property name="wheelMass" value="0.7"/>
 
-    <xacro:property name="baseMass" value="1"/>
+    <xacro:property name="baseMass" value="20"/>
 
     <!-- Base of the robot -->
     <xacro:base name="base" mass="${baseMass}"/>
 
     <!-- Left Side of the wheels -->
-    <xacro:wheel name="wheel_Left_Front"  mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${FrontWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
-    <xacro:wheel name="wheel_Left_Middle" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${MiddleWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
-    <xacro:wheel name="wheel_Left_Back" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${BackWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Right_Front"  mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${FrontWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Right_Middle" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${MiddleWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Right_Back" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${BackWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
 
     <!-- Right Side of the wheels -->
-    <xacro:wheel name="wheel_Right_Front" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${FrontWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
-    <xacro:wheel name="wheel_Right_Middle" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${MiddleWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
-    <xacro:wheel name="wheel_Right_Back" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${BackWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Left_Front" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${FrontWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Left_Middle" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${MiddleWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Left_Back" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${BackWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
 
     <!-- Camera -->
 
