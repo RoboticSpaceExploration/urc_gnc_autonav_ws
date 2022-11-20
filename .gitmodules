@@ -1,0 +1,6 @@
+[submodule "src/ublox"]
+	path = src/ublox
+	url = https://github.com/KumarRobotics/ublox.git
+[submodule "src/rtcm_msgs"]
+	path = src/rtcm_msgs
+	url = https://github.com/tilk/rtcm_msgs.git
