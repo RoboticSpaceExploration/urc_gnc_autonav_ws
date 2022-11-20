@@ -145,8 +145,8 @@
         <camera name="${sensor_name}">
           <horizontal_fov>${69.4*deg_to_rad}</horizontal_fov>
           <image>
-            <width>640</width>
-            <height>480</height>
+            <width>1280</width>
+            <height>720</height>
             <format>RGB_INT8</format>
           </image>
           <clip>
@@ -161,7 +161,6 @@
         </camera>
         <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
           <alwaysOn>true</alwaysOn>
-          <updateRate>${rate}</updateRate>
           <cameraName>${sensor_name}/color</cameraName>
           <imageTopicName>image_raw</imageTopicName>
           <cameraInfoTopicName>camera_info</cameraInfoTopicName>
@@ -200,7 +199,6 @@
         </camera>
         <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
           <alwaysOn>true</alwaysOn>
-          <updateRate>${rate}</updateRate>
           <cameraName>${sensor_name}/ired1</cameraName>
           <imageTopicName>image_raw</imageTopicName>
           <cameraInfoTopicName>camera_info</cameraInfoTopicName>
@@ -239,7 +237,6 @@
         </camera>
         <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
           <alwaysOn>true</alwaysOn>
-          <updateRate>${rate}</updateRate>
           <cameraName>${sensor_name}/ired2</cameraName>
           <imageTopicName>image_raw</imageTopicName>
           <cameraInfoTopicName>camera_info</cameraInfoTopicName>
@@ -275,6 +272,23 @@
             <stddev>0.100</stddev>
           </noise>
         </camera>
+        <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+          <alwaysOn>true</alwaysOn>
+          <updateRate>${rate}</updateRate>
+          <cameraName>${sensor_name}/depth</cameraName>
+          <imageTopicName>image_raw</imageTopicName>
+          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+          <frameName>${sensor_name}_depth_optical_frame</frameName>
+          <hackBaseline>0.07</hackBaseline>
+          <distortionK1>-0.007419134024530649</distortionK1>
+          <distortionK2>0.041209351271390915</distortionK2>
+          <distortionK3>-0.03811917081475258</distortionK3>
+          <distortionT1>0.006366158835589886</distortionT1>
+          <distortionT2>0.0</distortionT2>
+          <CxPrime>416.00531005859375</CxPrime>
+          <Cx>16.00531005859375</Cx>
+          <Cy>403.38909912109375</Cy>
+        </plugin>
         <always_on>1</always_on>
         <update_rate>90</update_rate>
         <visualize>0</visualize>
@@ -301,7 +315,7 @@
         <infrared2OpticalframeName>${sensor_name}_infrared2_optical_frame</infrared2OpticalframeName>
         <rangeMinDepth>0.2</rangeMinDepth>
         <rangeMaxDepth>10.0</rangeMaxDepth>
-        <pointCloud>false</pointCloud>
+        <pointCloud>true</pointCloud>
         <pointCloudTopicName>depth/color/points</pointCloudTopicName>
         <pointCloudCutoff>0.25</pointCloudCutoff>
         <pointCloudCutoffMax>9.0</pointCloudCutoffMax>

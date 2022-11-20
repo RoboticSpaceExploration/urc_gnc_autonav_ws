@@ -9,8 +9,8 @@
     
     <!-- coordinates to spawn model -->
 
-    <arg name="x" default="0"/>
-    <arg name="y" default="0"/>
+    <arg name="x" default="2"/>
+    <arg name="y" default="-1"/>
     <arg name="z" default="2"/>
 
     <node name="robot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen"
@@ -21,5 +21,6 @@
     <include file="$(find gnc_control)/launch/gnc_control_simulation.launch"/>
     <include file="$(find gnc_localization)/launch/gnc_local_ekf.launch"/>
     <include file="$(find gnc_localization)/launch/gnc_global_ekf.launch"/>
+    <include file="$(find gnc_mapping)/launch/gnc_rtabmap.launch"/>
 
 </launch>
