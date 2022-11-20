@@ -26,7 +26,7 @@
 		<rosparam param="odom0_config">[true, true, true, false, false, false, false, false, false, false, false, false, false, false, false]</rosparam>
 		<rosparam param="odom1_differential">false</rosparam>
 
-		<param name="odom1" value="camera_z/odom/sample"/>
+		<param name="odom1" value="t265/odom/sample"/>
 			
 		<rosparam param="odom1_config">[true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]</rosparam>
 	</node>
