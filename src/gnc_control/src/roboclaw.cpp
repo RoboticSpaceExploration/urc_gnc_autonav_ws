@@ -371,6 +371,7 @@ void roboclaw::SendCommandToWheels(double* cmd) {
     for (int i = 0; i <= 5; i++)
         cmd_send[i] = ScaleCommand(cmd[i]);
 
+    ROS_INFO_STREAM(cmd_send[0] << " " << cmd_send[3] << "\n");
     // prevent zero velocity spamming from ros_control
 
     if (zeroCmdVelCount <= es->retries) {
@@ -458,7 +459,7 @@ uint8_t roboclaw::ScaleCommand(double cmd) {
     double res = (fabs(cmd)/16.667)*es->max_m1m2_value;
 
     if (res >= es->max_m1m2_value)
-        res = es->max_m1m2_value;
+        return es->max_m1m2_value;
 
     return res;  // setup for teleop_twist for now, max teleop_twist is 16.667
 }
