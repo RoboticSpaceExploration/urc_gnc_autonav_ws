@@ -11,16 +11,7 @@
 		pkg="controller_manager"
 		type="spawner"  
 		output="screen"  
-		ns="/gnc_robot" 
-		args="gnc_robot_velocity_controller 
-			gnc_robot_joint_publisher" />
+		args="/gnc_robot/gnc_robot_velocity_controller 
+			/gnc_robot/gnc_robot_joint_publisher" />
 	
-	<!-- Launch 2 camera nodes for the T265 and d435i refer to realsense2-ros
-		documentation to check what other topics we need from the cameras-->
-	<include file="$(find realsense2_camera)/launch/rs_multiple_devices.launch">
-		<arg name="camera1" value="T265" /> <!--T265 CAMERA-->
-		<arg name="serial_no_camera1" value="201222113017000000K40152-100" /> <!--T265 CAMERA SERIAL NUMBER-->
-		<arg name="camera2" value="d435i" /> <!--d435i CAMERA-->
-		<arg name="serial_no_camera2" value="102122072568" /> <!--d435i CAMERA SERIAL NUMBER-->
-	</include>
 </launch>

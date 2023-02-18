@@ -38,7 +38,7 @@ struct settings {
     uint8_t m2_backward           = 5;
     uint8_t m1_read_encoder_speed = 18;
     uint8_t m2_read_encoder_speed = 19;
-    double max_m1m2_value         = 127;
+    double max_m1m2_value         = 126;
     double loopFrequency          = 10;
     bool debug_mode               = true;
 };

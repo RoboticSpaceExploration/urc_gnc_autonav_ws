@@ -1,0 +1,6 @@
+
+<launch>
+	<include file="$(find gnc_bringup)/launch/gnc_core.launch"/>
+	<include file="$(find gnc_control)/launch/gnc_control_hardware.launch"/>
+	<include file="$(find gnc_teleop)/launch/gnc_teleop.launch"/>
+</launch>

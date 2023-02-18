@@ -458,7 +458,7 @@ uint8_t roboclaw::ScaleCommand(double cmd) {
     double res = (fabs(cmd)/16.667)*es->max_m1m2_value;
 
     if (res >= es->max_m1m2_value)
-        res = es->max_m1m2_value;
+        return es->max_m1m2_value;
 
     return res;  // setup for teleop_twist for now, max teleop_twist is 16.667
 }
