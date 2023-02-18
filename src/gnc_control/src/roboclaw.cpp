@@ -371,7 +371,6 @@ void roboclaw::SendCommandToWheels(double* cmd) {
     for (int i = 0; i <= 5; i++)
         cmd_send[i] = ScaleCommand(cmd[i]);
 
-    ROS_INFO_STREAM(cmd_send[0] << " " << cmd_send[3] << "\n");
     // prevent zero velocity spamming from ros_control
 
     if (zeroCmdVelCount <= es->retries) {
