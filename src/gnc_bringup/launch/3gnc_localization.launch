@@ -1,0 +1,6 @@
+
+<launch>
+
+	<include file="$(find gnc_localization)/launch/gnc_global_ekf.launch"/>
+
+</launch>

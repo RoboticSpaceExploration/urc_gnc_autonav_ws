@@ -1,0 +1,6 @@
+
+<launch>
+
+	<include file="$(find gnc_hardware)/launch/gnc_hardware.launch"/>
+
+</launch>

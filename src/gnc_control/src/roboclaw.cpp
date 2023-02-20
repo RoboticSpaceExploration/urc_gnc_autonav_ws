@@ -289,7 +289,7 @@ uint32_t Roboclaw::ValidateChecksum(uint8_t* packet, int nBytes) {
    and checksum in an array, send commands to be executed. */
 
 void Roboclaw::ForwardM1(uint8_t address, uint8_t value) {
-    uint8_t get_crc[3] = {address, settings->maxEffortValue, value};
+    uint8_t get_crc[3] = {address, settings->m1Forward, value};
     uint8_t data[5];
 
     uint16_t crc = ValidateChecksum(get_crc, 3);

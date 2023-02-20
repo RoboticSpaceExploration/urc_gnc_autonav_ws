@@ -1,0 +1,7 @@
+<launch>
+
+    <include file="$(find gnc_bringup)/launch/1gnc_core.launch"/>
+    <include file="$(find gnc_bringup)/launch/2gnc_hwin.launch"/>
+    <include file="$(find gnc_bringup)/launch/3gnc_localization.launch"/>
+
+</launch>
