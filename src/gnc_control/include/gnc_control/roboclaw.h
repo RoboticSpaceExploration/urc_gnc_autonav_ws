@@ -39,7 +39,7 @@ struct RoboclawSettings
     uint8_t m2ReadEncoderSpeed      = 19;
     uint8_t maxEffortValue           = 126;
     double loopFrequency            = 10;
-    bool debugMode                  = true;
+    bool debugMode                  = false;
 };
 
 class Roboclaw 
