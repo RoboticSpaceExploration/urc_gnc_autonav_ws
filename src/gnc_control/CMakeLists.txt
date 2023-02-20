@@ -149,8 +149,8 @@ include
 # # add_dependencies(robot_hardware_interface ${catkin_EXPORTED_TARGETS})
 # target_link_libraries(single_joint_hardware_interface ${catkin_LIBRARIES})
 
-add_executable(robot_hardware_interface src/robot_hardware_interface.cpp src/roboclaw.cpp)
-target_link_libraries(robot_hardware_interface ${catkin_LIBRARIES})
+add_executable(wheel_hardware_interface src/wheel_hardware_interface.cpp src/roboclaw.cpp)
+target_link_libraries(wheel_hardware_interface ${catkin_LIBRARIES})
 link_directories(${catkin_LIBRARY_DIRS})
 
 ## Rename C++ executable without prefix

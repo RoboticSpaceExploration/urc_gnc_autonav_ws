@@ -1,10 +1,10 @@
 gnc_robot:
-  gnc_robot_joint_publisher:
+  gnc_wheel_joint_publisher:
     type: "joint_state_controller/JointStateController"
     publish_rate: 50  
 
   # parameters for the diff drive controller aka wheel velocity controller.
-  gnc_robot_velocity_controller: 
+  gnc_wheel_velocity_controller: 
     type: "diff_drive_controller/DiffDriveController"
     right_wheel: ['wheel_Right_Front_joint', 'wheel_Right_Middle_joint', 'wheel_Right_Back_joint']
     left_wheel: ['wheel_Left_Front_joint', 'wheel_Left_Middle_joint', 'wheel_Left_Back_joint']

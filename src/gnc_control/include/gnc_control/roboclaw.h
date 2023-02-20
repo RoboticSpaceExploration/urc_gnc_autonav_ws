@@ -16,18 +16,37 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef SRC_PROTOBOT_CONTROL_INCLUDE_ROBOCLAW_H_
-#define SRC_PROTOBOT_CONTROL_INCLUDE_ROBOCLAW_H_
+#ifndef GNC_CONTROL_ROBOCLAW_H
+#define GNC_CONTROL_ROBOCLAW_H
 
 #include <ros/ros.h>
 #include <stdint.h>
 #include <termios.h>
-#include <gnc_control/settings.h>
 
-class roboclaw {
+struct RoboclawSettings 
+{
+    std::string serialPortAddress;
+    int addresses[8]; // 0x80 - 0x87
+    int timeoutMs                    = 12;
+    int retries                     = 3;
+    int maxBufferSize               = 100;
+    int baudRate                    = 115200;
+    uint8_t m1Forward               = 0;
+    uint8_t m2Forward               = 4;
+    uint8_t m1Backward              = 1;
+    uint8_t m2Backward              = 5;
+    uint8_t m1ReadEncoderSpeed      = 18;
+    uint8_t m2ReadEncoderSpeed      = 19;
+    uint8_t maxEffortValue           = 126;
+    double loopFrequency            = 10;
+    bool debugMode                  = true;
+};
+
+class Roboclaw 
+{
  public:
-    explicit roboclaw(settings* es_protobot);
-    ~roboclaw();
+    explicit Roboclaw(RoboclawSettings*);
+    ~Roboclaw();
     void SetupEncoders();
     void CloseEncoders();
     void SendCommandToWheels(double* cmd);
@@ -53,7 +72,7 @@ class roboclaw {
     void ReadEncoderSpeedM2(uint8_t address);
 
     termios tty;
-    settings* es;
+    RoboclawSettings* settings;
     int serialPort;
     int zeroCmdVelCount;
     unsigned int baudRate;  // instead of uint32_t for compatability
@@ -62,4 +81,4 @@ class roboclaw {
     char errorBuf[256];     // used by strerror_r, thread safe
 };
 
-#endif  // SRC_PROTOBOT_CONTROL_INCLUDE_ROBOCLAW_H_
+#endif  // GNC_CONTROL_ROBOCLAW_H

@@ -20,35 +20,107 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#include <fcntl.h>
-#include <errno.h>
-#include <termios.h>
-#include <unistd.h>  // serial read() and write() defined here
+// Linux headers
+#include <fcntl.h> // File controls like O_RDWR
+#include <errno.h> // Error integer and strerror()
+#include <termios.h> // POSIX terminal control definitions
+#include <unistd.h>  // read(), write(), close()
+
+// Standard library headers
 #include <sys/time.h>
 #include <assert.h>
 #include <math.h>
 #include <cstdlib>
 #include <cstring>
+
+// GNC headers
 #include <gnc_control/roboclaw.h>
 
-roboclaw::roboclaw(settings* es_protobot) {
+Roboclaw::Roboclaw(RoboclawSettings* settings) {
     for (int i = 0; i < 256; i++)
         errorBuf[i] = 0x00;
     zeroCmdVelCount = 0;
-    es = es_protobot;
+    this->settings = settings;
     GetBaudRate();
+    SetupEncoders();
 }
 
-roboclaw::~roboclaw() {
-    ROS_INFO("roboclaw: destructor called");
+Roboclaw::~Roboclaw() {
+    ROS_INFO("Deconstructing: closing serial port connection");
+    CloseEncoders();
 }
 
-uint32_t roboclaw::RecombineBuffer(uint8_t* buf) {
+/* Setup Roboclaw motor encoders. Open serial port for reading and writing, 
+    configure for 1 stop bit, 8 bits per byte, no parity checking (8N1 uart config)
+   as per the roboclaw user manual. Send and receive raw bytes only. 
+   Set baud rate of sending and receiving end. */
+
+void Roboclaw::SetupEncoders() {
+    // enable read & write, disable controlling terminal
+    serialPort = open(settings->serialPortAddress.c_str(), O_RDWR | O_NOCTTY);
+
+    if (serialPort < 0) {
+        errorBufPtr = strerror_r(errno, errorBuf, sizeof(errorBuf));
+        ROS_ERROR("Could not open %s: Error %i from open: %s",
+                 settings->serialPortAddress.c_str(), errno, errorBufPtr);
+        exit(EXIT_FAILURE);
+    }
+
+    fcntl(serialPort, F_SETFL, 0);  // set to blocking mode (for reads)
+
+    if (tcgetattr(serialPort, &tty) != 0) {
+        errorBufPtr = strerror_r(errno, errorBuf, sizeof(errorBuf));
+        ROS_ERROR("Error %i from tcgetattr: %s", errno, errorBufPtr);
+        exit(EXIT_FAILURE);
+    }
+
+    // set necessary bits
+
+    tty.c_cflag &= ~PARENB;         // don't use parity bit
+    tty.c_cflag &= ~CSTOPB;         // use 1 stop bit
+    tty.c_cflag |= CS8;             // 8 bit characters
+    tty.c_cflag &= ~CRTSCTS;        // no hardware flowcontrol
+    tty.c_cflag |= CREAD | CLOCAL;  // ignore modem controls
+
+    tty.c_lflag &= ~ICANON;
+
+    tty.c_lflag &= ~ECHO;
+    tty.c_lflag &= ~ECHOE;
+    tty.c_lflag &= ~ECHONL;
+    tty.c_lflag &= ~ISIG;
+
+    // setup for non canonical mode
+    tty.c_iflag &= ~(IXON | IXOFF | IXANY);
+    tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL);
+
+    tty.c_oflag &= ~OPOST;
+    tty.c_oflag &= ~ONLCR;
+
+    tty.c_cc[VTIME] = 0;
+    tty.c_cc[VMIN]  = 1;
+
+    // set baud rates
+
+    cfsetispeed(&tty, baudRate);
+    cfsetospeed(&tty, baudRate);
+
+    // save flag settings
+
+    if (tcsetattr(serialPort, TCSANOW, &tty) != 0) {
+        strerror_r(errno, errorBuf, sizeof(errorBuf));
+        ROS_ERROR("Error %i from tcsetattr: %s", errno, errorBuf);
+    }
+
+    ClearIOBuffers();
+}
+
+uint32_t Roboclaw::RecombineBuffer(uint8_t* buf) {
     return (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
 }
 
-void roboclaw::GetBaudRate() {
-    switch (es->baud_rate) {
+void Roboclaw::GetBaudRate() {
+    ROS_INFO_STREAM(settings->baudRate);
+    switch (settings->baudRate) {
         case 9600:
             ROS_INFO("Setting baud rate to 9600");
             baudRate = B9600;
@@ -88,15 +160,15 @@ void roboclaw::GetBaudRate() {
    Successful writes to encoders are then polled to check if data is available to be read back. Once data is available, the data
    is read back, then the user's I/O buffers are cleared. */
 
-int roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
+int Roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
     int r, writeFlag, readFlag, flushFlag, waitStatus;
 
-    for (r=0; r < es->retries; ++r) {
-        for ( ; r < es->retries; ++r) {
+    for (r=0; r < settings->retries; ++r) {
+        for ( ; r < settings->retries; ++r) {
             writeFlag = WriteToEncoders(data, writeBytes);
             if (writeFlag == -1) return -1;
-            if (es->debug_mode) {
-                waitStatus = WaitReadStatus(readBytes, es->timeout_ms);
+            if (settings->debugMode) {
+                waitStatus = WaitReadStatus(readBytes, settings->timeoutMs);
                 // data is available to be read back
                 if (waitStatus == 1) break;
                 if (waitStatus == -1 || waitStatus == 0) return -1;
@@ -108,9 +180,9 @@ int roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
             if (flushFlag == -1) return -1;
         }
 
-        if (r >= es->retries) return -1;
+        if (r >= settings->retries) return -1;
 
-        if (es->debug_mode) {
+        if (settings->debugMode) {
             readFlag = ReadFromEncoders(readBytes);
             if (readFlag > 0) return 1;
             if (readFlag == -1) return -1;
@@ -127,81 +199,21 @@ int roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
     return r;  // max retries exceeded
 }
 
-int roboclaw::ClearIOBuffers() {
+int Roboclaw::ClearIOBuffers() {
     return tcflush(serialPort, TCIOFLUSH);
 }
 
-/* Setup Roboclaw motor encoders. Open serial port for reading and writing, configure for 1 stop bit, 8 bits per byte, no parity checking
-   as per the roboclaw user manual. Send and receive raw bytes only. Set baud rate of sending and receiving end. */
-
-void roboclaw::SetupEncoders() {
-    // enable read & write, disable controlling terminal
-    serialPort = open(es->serialPortAddr.c_str(), O_RDWR | O_NOCTTY);
-
-    if (serialPort < 0) {
-        errorBufPtr = strerror_r(errno, errorBuf, sizeof(errorBuf));
-        ROS_ERROR("Could not open %s: Error %i from open: %s",
-                 es->serialPortAddr.c_str(), errno, errorBufPtr);
-        exit(EXIT_FAILURE);
-    }
-
-    fcntl(serialPort, F_SETFL, 0);  // set to blocking mode (for reads)
-
-    if (tcgetattr(serialPort, &tty) != 0) {
-        errorBufPtr = strerror_r(errno, errorBuf, sizeof(errorBuf));
-        ROS_ERROR("Error %i from tcgetattr: %s", errno, errorBufPtr);
-        exit(EXIT_FAILURE);
-    }
-
-    // set necessary bits
-
-    tty.c_cflag &= ~PARENB;
-    tty.c_cflag &= ~CSTOPB;
-    tty.c_cflag |= CS8;
-    tty.c_cflag &= ~CRTSCTS;
-    tty.c_cflag |= CREAD | CLOCAL;
-
-    tty.c_lflag &= ~ICANON;
-
-    tty.c_lflag &= ~ECHO;
-    tty.c_lflag &= ~ECHOE;
-    tty.c_lflag &= ~ECHONL;
-    tty.c_lflag &= ~ISIG;
-
-    tty.c_iflag &= ~(IXON | IXOFF | IXANY);
-    tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL);
-
-    tty.c_oflag &= ~OPOST;
-    tty.c_oflag &= ~ONLCR;
-
-    tty.c_cc[VTIME] = 0;
-    tty.c_cc[VMIN]  = 1;
-
-    // set baud rates
-
-    cfsetispeed(&tty, baudRate);
-    cfsetospeed(&tty, baudRate);
-
-    // save flag settings
-
-    if (tcsetattr(serialPort, TCSANOW, &tty) != 0) {
-        strerror_r(errno, errorBuf, sizeof(errorBuf));
-        ROS_ERROR("Error %i from tcsetattr: %s", errno, errorBuf);
-    }
-
-    ClearIOBuffers();
-}
 
 /* Close serial port file descriptor. */
 
-void roboclaw::CloseEncoders() {
+void Roboclaw::CloseEncoders() {
     close(serialPort);
 }
 
 /* Write commands to encoders, check flag status. Returns number of bytes successfully sent to encoders (writeFlag > 0).
    Returns -1 on failure. */
 
-int roboclaw::WriteToEncoders(uint8_t* data, int nBytes) {
+int Roboclaw::WriteToEncoders(uint8_t* data, int nBytes) {
     int writeFlag = write(serialPort, data, nBytes);
 
     if (writeFlag != nBytes) return -1;
@@ -213,7 +225,7 @@ int roboclaw::WriteToEncoders(uint8_t* data, int nBytes) {
    data is available to be read back, within the specified timeout period. Returns 1 on success. Otherwise,
    return 0 or -1 signifying an error. */
 
-int roboclaw::WaitReadStatus(int nBytes, int timeout_ms) {
+int Roboclaw::WaitReadStatus(int nBytes, int timeout_ms) {
     struct timeval tv;
     fd_set input;
     int ret;
@@ -242,8 +254,8 @@ int roboclaw::WaitReadStatus(int nBytes, int timeout_ms) {
 /* Reads available data from roboclaw buffer. returns the number of bytes specified by the user upon success (readFlag > 0).
    Returns -1 upon failure. */
 
-int roboclaw::ReadFromEncoders(int nBytes) {
-    for (int i = 0; i < es->max_buf_size; i++)
+int Roboclaw::ReadFromEncoders(int nBytes) {
+    for (int i = 0; i < settings->maxBufferSize; i++)
         buf[i] = 0x00;
 
     int readFlag = read(serialPort, &buf, nBytes);
@@ -256,7 +268,7 @@ int roboclaw::ReadFromEncoders(int nBytes) {
 /* Get checksum calculation. the Checksum is calculated using Cyclic Redundancy Check (CRC), which uses the encoder address,
    commands and data sent to the encoders. Valid commands will be executed by the encoder, invalid commands will be discarded. */
 
-uint32_t roboclaw::ValidateChecksum(uint8_t* packet, int nBytes) {
+uint32_t Roboclaw::ValidateChecksum(uint8_t* packet, int nBytes) {
     int crc = 0;
 
     for (int byte = 0; byte < nBytes; byte++) {
@@ -276,8 +288,8 @@ uint32_t roboclaw::ValidateChecksum(uint8_t* packet, int nBytes) {
 /* Move M1 motors. specify the motor address and desired speed value (0-127), then get checksum. Set commands
    and checksum in an array, send commands to be executed. */
 
-void roboclaw::ForwardM1(uint8_t address, uint8_t value) {
-    uint8_t get_crc[3] = {address, es->m1_forward, value};
+void Roboclaw::ForwardM1(uint8_t address, uint8_t value) {
+    uint8_t get_crc[3] = {address, settings->maxEffortValue, value};
     uint8_t data[5];
 
     uint16_t crc = ValidateChecksum(get_crc, 3);
@@ -293,8 +305,8 @@ void roboclaw::ForwardM1(uint8_t address, uint8_t value) {
 
 /* Move M1 motors backwards */
 
-void roboclaw::BackwardM1(uint8_t address, uint8_t value) {
-    uint8_t get_crc[3] = {address, es->m1_backward, value};
+void Roboclaw::BackwardM1(uint8_t address, uint8_t value) {
+    uint8_t get_crc[3] = {address, settings->m1Backward, value};
     uint8_t data[5];
 
     uint16_t crc = ValidateChecksum(get_crc, 3);
@@ -311,8 +323,8 @@ void roboclaw::BackwardM1(uint8_t address, uint8_t value) {
 /* Move M2 motors. specify the motor address and desired speed value (0-127), then get checksum. Set commands
    and checksum in an array, send commands to be executed. */
 
-void roboclaw::ForwardM2(uint8_t address, uint8_t value) {
-    uint8_t get_crc[3] = {address, es->m2_forward, value};
+void Roboclaw::ForwardM2(uint8_t address, uint8_t value) {
+    uint8_t get_crc[3] = {address, settings->m2Forward, value};
     uint8_t data[5];
 
     uint16_t crc = ValidateChecksum(get_crc, 3);
@@ -328,8 +340,8 @@ void roboclaw::ForwardM2(uint8_t address, uint8_t value) {
 
 /* Move M2 motors backwards */
 
-void roboclaw::BackwardM2(uint8_t address, uint8_t value) {
-    uint8_t get_crc[3] = {address, es->m2_backward, value};
+void Roboclaw::BackwardM2(uint8_t address, uint8_t value) {
+    uint8_t get_crc[3] = {address, settings->m2Backward, value};
     uint8_t data[5];
 
     uint16_t crc = ValidateChecksum(get_crc, 3);
@@ -343,8 +355,8 @@ void roboclaw::BackwardM2(uint8_t address, uint8_t value) {
     SendCommands(data, 5, 1);
 }
 
-void roboclaw::ReadEncoderSpeedM1(uint8_t address) {
-    uint8_t get_crc[2] = {address, es->m1_read_encoder_speed};
+void Roboclaw::ReadEncoderSpeedM1(uint8_t address) {
+    uint8_t get_crc[2] = {address, settings->m1ReadEncoderSpeed};
     uint8_t data[7];
 
     for (int i = 0; i < 2; i++)
@@ -353,8 +365,8 @@ void roboclaw::ReadEncoderSpeedM1(uint8_t address) {
     SendCommands(data, 2, 7);
 }
 
-void roboclaw::ReadEncoderSpeedM2(uint8_t address) {
-    uint8_t get_crc[2] = {address, es->m2_read_encoder_speed};
+void Roboclaw::ReadEncoderSpeedM2(uint8_t address) {
+    uint8_t get_crc[2] = {address, settings->m2ReadEncoderSpeed};
     uint8_t data[7];
 
     for (int i = 0; i < 2; i++)
@@ -363,7 +375,7 @@ void roboclaw::ReadEncoderSpeedM2(uint8_t address) {
     SendCommands(data, 2, 7);
 }
 
-void roboclaw::SendCommandToWheels(double* cmd) {
+void Roboclaw::SendCommandToWheels(double* cmd) {
     uint8_t cmd_send[6] = {0};
 
     // convert cmd_vel to a usable command between 0-127
@@ -372,8 +384,7 @@ void roboclaw::SendCommandToWheels(double* cmd) {
         cmd_send[i] = ScaleCommand(cmd[i]);
 
     // prevent zero velocity spamming from ros_control
-
-    if (zeroCmdVelCount <= es->retries) {
+    if (zeroCmdVelCount <= settings->retries) {
         // if positive, move motors forward. if negative, move backwards
         if (cmd[0] >= 0)  // right_front
             ForwardM1(0x80, cmd_send[0]);
@@ -417,7 +428,7 @@ void roboclaw::SendCommandToWheels(double* cmd) {
     }
 }
 
-void roboclaw::GetVelocityFromWheels(double* vel) {
+void Roboclaw::GetVelocityFromWheels(double* vel) {
     // return positive or negative value from encoders, depending on direction
     ReadEncoderSpeedM1(0x80);  // right_front
     vel[0] = ConvertPulsesToRadians(
@@ -454,17 +465,17 @@ void roboclaw::GetVelocityFromWheels(double* vel) {
  *  Scale command between 0-127 to be sent to encoders
  */
 
-uint8_t roboclaw::ScaleCommand(double cmd) {
-    double res = (fabs(cmd)/16.667)*es->max_m1m2_value;
+uint8_t Roboclaw::ScaleCommand(double cmd) {
+    double res = (fabs(cmd) / 16.667) * settings->maxEffortValue;
 
-    if (res >= es->max_m1m2_value)
-        return es->max_m1m2_value;
+    if (res >= settings->maxEffortValue)
+        return settings->maxEffortValue;
 
-    return res;  // setup for teleop_twist for now, max teleop_twist is 16.667
+    return (uint8_t) res;  // setup for teleop_twist for now, max teleop_twist is 16.667
 }
 
 /* will need to fix conversion in later push */
 
-double roboclaw::ConvertPulsesToRadians(double vel) {
+double Roboclaw::ConvertPulsesToRadians(double vel) {
     return (vel/119.3697);  // convert from QPPS to rad/s, (750 p/rev)(1/(2*pi))
 }
