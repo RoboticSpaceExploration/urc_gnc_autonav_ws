@@ -47,6 +47,8 @@ Roboclaw::Roboclaw(RoboclawSettings* settings) {
 
 Roboclaw::~Roboclaw() {
     ROS_INFO("Deconstructing: closing serial port connection");
+    ForwardM2(0x80, 0);
+    ForwardM1(0x80, 0);
     CloseEncoders();
 }
 
@@ -373,6 +375,60 @@ void Roboclaw::ReadEncoderSpeedM2(uint8_t address) {
         data[i] = get_crc[i];
 
     SendCommands(data, 2, 7);
+}
+
+void Roboclaw::SetPositionM1(uint8_t address, uint32_t value)
+{
+    uint8_t tempVal[4];
+    tempVal[0] = (uint8_t)((value >> 24) & 0xFF);
+    tempVal[1] = (uint8_t)((value >> 16) & 0xFF);
+    tempVal[2] = (uint8_t)((value >> 8) & 0xFF);
+    tempVal[3] = (uint8_t)(value & 0xFF);
+    uint8_t get_crc[7] = {address, settings->m1Position, tempVal[0], tempVal[1], tempVal[2], tempVal[3], 0};
+    uint8_t data[9];
+
+    data[0] = address;
+    data[1] = settings->m2Position;
+    data[2] = (uint8_t)((value >> 24) & 0xFF);
+    data[3] = (uint8_t)((value >> 16) & 0xFF);
+    data[4] = (uint8_t)((value >> 8) & 0xFF);
+    data[5] = (uint8_t)(value & 0xFF);
+    data[6] = 0; // buffer option
+
+    uint16_t crc = ValidateChecksum(get_crc, 7);
+
+    data[7] = crc >> 8;
+    data[8] = crc;
+
+    SendCommands(data, 9, 1);
+}
+
+void Roboclaw::SetPositionM2(uint8_t address, int32_t value)
+{
+    uint8_t tempVal[4];
+
+    tempVal[0] = ((value >> 24) & 0xFF);
+    tempVal[1] = ((value >> 16) & 0xFF);
+    tempVal[2] = ((value >> 8) & 0xFF);
+    tempVal[3] = (value & 0xFF);
+
+    uint8_t get_crc[7] = {address, settings->m2Position, tempVal[0], tempVal[1], tempVal[2], tempVal[3], 0};
+    uint8_t data[9];
+
+    data[0] = address;
+    data[1] = settings->m2Position;
+    data[2] = ((value >> 24) & 0xFF);
+    data[3] = ((value >> 16) & 0xFF);
+    data[4] = ((value >> 8) & 0xFF);
+    data[5] = (value & 0xFF);
+    data[6] = 0; // buffer option
+
+    uint16_t crc = ValidateChecksum(get_crc, 7);
+
+    data[7] = crc >> 8;
+    data[8] = crc;
+
+    SendCommands(data, 9, 1);
 }
 
 void Roboclaw::SendCommandToWheels(double* cmd) {

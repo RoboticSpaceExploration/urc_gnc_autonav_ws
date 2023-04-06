@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(gnc_control)
+project(gnc_planner)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -7,17 +7,7 @@ project(gnc_control)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS
-  controller_manager
-  controller_manager_msgs
-  gazebo_ros
-  joint_state_controller
-  urdf
-  std_msgs
-  roscpp
-  hardware_interface
-  tf
-)
+find_package(catkin REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -109,12 +99,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
- INCLUDE_DIRS include
-#  LIBRARIES gnc_control
-  CATKIN_DEPENDS 
-    controller_manager 
-    roscpp 
-    hardware_interface
+#  INCLUDE_DIRS include
+#  LIBRARIES gnc_planner
+#  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
 
@@ -125,14 +112,13 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-include
-  ${catkin_INCLUDE_DIRS}
-  ${Boost_INCLUDE_DIRS}
+# include
+# ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/gnc_control.cpp
+#   src/${PROJECT_NAME}/gnc_planner.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -143,20 +129,7 @@ include
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/gnc_control_node.cpp)
-
-# add_executable(single_joint_hardware_interface src/robot_hardware_interface.cpp)
-# # add_dependencies(robot_hardware_interface ${catkin_EXPORTED_TARGETS})
-# target_link_libraries(single_joint_hardware_interface ${catkin_LIBRARIES})
-
-add_executable(wheel_hardware_interface src/wheel_hardware_interface.cpp src/roboclaw.cpp)
-target_link_libraries(wheel_hardware_interface ${catkin_LIBRARIES})
-link_directories(${catkin_LIBRARY_DIRS})
-
-add_executable(arm_hardware_interface src/arm_hardware_interface.cpp src/roboclaw.cpp)
-target_link_libraries(arm_hardware_interface ${catkin_LIBRARIES})
-link_directories(${catkin_LIBRARY_DIRS})
-
+# add_executable(${PROJECT_NAME}_node src/gnc_planner_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -182,10 +155,10 @@ link_directories(${catkin_LIBRARY_DIRS})
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
- catkin_install_python(PROGRAMS
-   scripts/arm_teleop.py
-   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
- )
+# catkin_install_python(PROGRAMS
+#   scripts/my_python_script
+#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+# )
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
@@ -220,7 +193,7 @@ link_directories(${catkin_LIBRARY_DIRS})
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_gnc_control.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_gnc_planner.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

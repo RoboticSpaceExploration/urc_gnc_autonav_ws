@@ -37,7 +37,9 @@ struct RoboclawSettings
     uint8_t m2Backward              = 5;
     uint8_t m1ReadEncoderSpeed      = 18;
     uint8_t m2ReadEncoderSpeed      = 19;
-    uint8_t maxEffortValue           = 126;
+    uint8_t m1Position = 119;
+    uint8_t m2Position = 120;
+    uint8_t maxEffortValue = 126;
     double loopFrequency            = 10;
     bool debugMode                  = false;
 };
@@ -52,6 +54,15 @@ class Roboclaw
     void SendCommandToWheels(double* cmd);
     void GetVelocityFromWheels(double* vel);
 
+    void ForwardM1(uint8_t address, uint8_t value);
+    void ForwardM2(uint8_t address, uint8_t value);
+    void BackwardM1(uint8_t address, uint8_t value);
+    void BackwardM2(uint8_t address, uint8_t value);
+    void ReadEncoderSpeedM1(uint8_t address);
+    void ReadEncoderSpeedM2(uint8_t address);
+    void SetPositionM1(uint8_t address, uint32_t value);
+    void SetPositionM2(uint8_t address, int32_t value);
+
  private:
     void GetBaudRate();
     int ClearIOBuffers();
@@ -64,12 +75,6 @@ class Roboclaw
     uint32_t ValidateChecksum(uint8_t* packet, int nBytes);
     uint32_t RecombineBuffer(uint8_t* buf);
 
-    void ForwardM1(uint8_t address, uint8_t value);
-    void ForwardM2(uint8_t address, uint8_t value);
-    void BackwardM1(uint8_t address, uint8_t value);
-    void BackwardM2(uint8_t address, uint8_t value);
-    void ReadEncoderSpeedM1(uint8_t address);
-    void ReadEncoderSpeedM2(uint8_t address);
 
     termios tty;
     RoboclawSettings* settings;

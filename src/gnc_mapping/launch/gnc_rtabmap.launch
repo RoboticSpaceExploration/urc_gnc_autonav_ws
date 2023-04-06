@@ -2,7 +2,7 @@
   <group ns="rtabmap">
     <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_ros/rgbd_sync" output="screen">
       <remap from="rgb/image"       to="/d435i/color/image_raw"/>
-      <remap from="depth/image"     to="/d435i/depth/image_raw"/>
+      <remap from="depth/image"     to="/d435i/depth/image_rect_raw"/>
       <remap from="rgb/camera_info" to="/d435i/color/camera_info"/>
       
       <remap from="rgbd_image"      to="rgbd_image"/> <!-- output -->

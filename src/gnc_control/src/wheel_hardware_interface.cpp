@@ -18,9 +18,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
+#include <gnc_control/roboclaw.h>
 #include <gnc_control/wheel_hardware_interface.h>
 #include <vector>
 #include <string>
+#include <math.h>
+#include <cstdlib>
 
 void GetYamlParameters(ros::NodeHandle*, WheelHwinSettings*, RoboclawSettings*);
 bool validateSettingsAndLogErrors(WheelHwinSettings*);
@@ -74,6 +77,7 @@ void GetYamlParameters(ros::NodeHandle* nh, WheelHwinSettings *wheelSettings, Ro
     std::vector<std::string> rightWheelNames, leftWheelNames; // list of wheel joint names
     std::vector<int> leftWheelAddresses, rightWheelAddresses; // each wheel's corresponding roboclaw addresses
     nh->getParam("/wheel_hwin_settings/debug_mode", wheelSettings->debugMode);
+    nh->getParam("/roboclaw_settings/send_command_retries", wheelSettings->maxRetries);
     nh->getParam("/wheel_hwin_settings/ros_loop_rate", wheelSettings->rosLoopRate);
     nh->getParam("/wheel_hwin_settings/left_addr", leftWheelAddresses);
     nh->getParam("/wheel_hwin_settings/right_addr", rightWheelAddresses);
@@ -213,7 +217,7 @@ void WheelHardwareInterface::writeToWheels(Roboclaw *rb)
         printDebugInfo("SENDING CMD_VEL TO", cmd);
     }
 
-    rb->SendCommandToWheels(cmd);
+    sendCommandToWheels(rb);
 }
 
 void WheelHardwareInterface::readFromWheels(Roboclaw *rb)
@@ -226,14 +230,68 @@ void WheelHardwareInterface::readFromWheels(Roboclaw *rb)
     }
 }
 
-void WheelHardwareInterface::sendCommandToWheels(Roboclaw* roboclaw)
+void WheelHardwareInterface::sendCommandToWheels(Roboclaw* rb)
 {
+    // convert cmd_vel to a usable command between 0-127
+    scaleCommands();
 
+    // prevent zero velocity spamming from ros_control
+    if (zeroCmdVelCount <= wheelSettings->maxRetries) {
+        // if positive, move motors forward. if negative, move backwards
+        if (cmd[0] >= 0)  // right_front
+            rb->ForwardM1(0x80, cmdToSend[0]);
+        else
+            rb->BackwardM1(0x80, cmdToSend[0]);
+
+        if (cmd[1] >= 0)  // right_middle
+            rb->ForwardM1(0x81, cmdToSend[1]);
+        else
+            rb->BackwardM1(0x81, cmdToSend[1]);
+
+        if (cmd[2] >= 0)  // right_back
+            rb->ForwardM1(0x82, cmdToSend[2]);
+        else
+            rb->BackwardM1(0x82, cmdToSend[2]);
+
+        if (cmd[3] >= 0)  // left_front
+            rb->ForwardM2(0x80, cmdToSend[3]);
+        else
+            rb->BackwardM2(0x80, cmdToSend[3]);
+
+        if (cmd[4] >= 0)  // left_middle
+            rb->ForwardM2(0x81, cmdToSend[4]);
+        else
+            rb->BackwardM2(0x81, cmdToSend[4]);
+
+        if (cmd[5] >= 0)  // left_back
+            rb->ForwardM2(0x82, cmdToSend[5]);
+        else
+            rb->BackwardM2(0x82, cmdToSend[5]);
+    }
+
+    // if any of the cmd_vel are zero, increment counter
+
+    if (cmd[0] == 0 || cmd[1] == 0 || cmd[2] == 0 ||
+        cmd[3] == 0 || cmd[4] == 0 || cmd[5] == 0) {
+        zeroCmdVelCount++;
+    } else {
+        zeroCmdVelCount = 0;  // reset counter
+        cmd[0] = cmd[1] = cmd[2] = cmd[3] = cmd[4] = cmd[5] = 0;
+    }
 }
 
 void WheelHardwareInterface::scaleCommands()
 {
     // TODO scaled the commands from 0-126 to send to roboclaw
+    for (int i = 0; i < 6; i++)
+    {
+        double res = (fabs(cmd[i]) / 16.667) * wheelSettings->maxEffortValue;
+
+        if (res >= wheelSettings->maxEffortValue)
+            cmdToSend[i] = wheelSettings->maxEffortValue;
+        else
+            cmdToSend[i] = (uint8_t) res;
+    }
 }
 
 void WheelHardwareInterface::getVelocityFromEncoders()

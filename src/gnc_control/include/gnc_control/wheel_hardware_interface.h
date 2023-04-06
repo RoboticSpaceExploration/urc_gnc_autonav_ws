@@ -16,7 +16,9 @@ struct WheelHwinSettings
     std::string rightWheelNames[3];
     int leftWheelRoboclawAddresses[3]; // Corresponding wheel to roboclaw address
     int rightWheelRoboclawAddresses[3];
+    uint8_t maxEffortValue = 126;
     int rosLoopRate = 10;
+    int maxRetries = 3;
     bool debugMode = false;
 };
 
@@ -51,8 +53,10 @@ private:
     ros::Duration elapsed_time;
     struct timespec last_time;
     struct timespec current_time;
+    int zeroCmdVelCount;
     // For reading commands sent from the controller
     double cmd[6];
+    uint8_t cmdToSend[6];
     // for sending data relating to the joints
     double pos[6];
     double vel[6];
