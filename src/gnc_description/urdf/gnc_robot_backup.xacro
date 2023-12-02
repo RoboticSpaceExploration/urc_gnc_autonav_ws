@@ -45,10 +45,12 @@
     </xacro:realsense_T265>
 
     <!-- IMU GPS -->
-    <xacro:include filename="$(find gnc_gazebo)/sensors/_zedf9r.xacro"/>
-    <xacro:Sparkfun_zedf9r name="zed_Sensor" parentLink="base_link">
-       <origin rpy="0 0 0" xyz="0 0 0.15"/>
-    </xacro:Sparkfun_zedf9r>
+    <!--    <xacro:include filename="$(find gnc_gazebo)/sensors/_zedf9r.xacro"/>
+        <xacro:Sparkfun_zedf9r name="zed_Sensor" parentLink="base_link">
+            <origin rpy="0 0 0" xyz="0 0 0.15"/>
+        </xacro:Sparkfun_zedf9r>
+	-->
+
     <!-- Gazebo code for protobot -->
     <gazebo>
         <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">

@@ -19,8 +19,5 @@
     <!--node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /-->
 
     <include file="$(find gnc_control)/launch/gnc_control_simulation.launch"/>
-    <include file="$(find gnc_localization)/launch/gnc_local_ekf.launch"/>
-    <include file="$(find gnc_localization)/launch/gnc_global_ekf.launch"/>
-    <include file="$(find gnc_mapping)/launch/gnc_rtabmap.launch"/>
 
 </launch>
