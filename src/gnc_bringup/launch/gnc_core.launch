@@ -1,4 +1,5 @@
 
 <launch>
 	<include file="$(find gnc_description)/launch/gnc_description.launch"/>
+	<include file="$(find gnc_localization)/launch/gnc_ekf.launch"/>
 </launch>
