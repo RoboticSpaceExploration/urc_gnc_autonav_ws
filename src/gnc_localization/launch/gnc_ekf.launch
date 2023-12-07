@@ -14,7 +14,7 @@
         <param name="zero_altitude" value="true"/>
         <param name="published_frame" value="odom"/>
 	<param name="yaw_offset" value="1.5708"/>
-        <remap from="imu/data" to="/imu/data"/>
+        <remap from="imu/data" to="/imu/data_raw"/>
         <remap from="gps/fix" to="/gps/fix"/>
         <remap from="odom" to="/odometry/filtered"/>
 

@@ -8,7 +8,8 @@
         <param name="subscribe_depth" value="true"/>
         <param name="subscribe_rgb" value="true"/>
         <param name="subscribe_scan" value="false"/>
-        <param name="subscribe_odom_info" value="true"/>
+        <param name="subscribe_odom_info" value="false"/>
+	<param name="publish_tf" value="false"/>
 
         <!-- RTAB-Map specific parameters -->
         <param name="Rtabmap/DetectionRate" value="1"/>
@@ -24,7 +25,7 @@
 
         <!-- Remapping D435i camera topics -->
         <remap from="rgb/image" to="/d435i/color/image_raw"/>
-        <remap from="depth/image" to="/d435i/aligned_depth_to_color/image_raw"/>
+        <remap from="depth/image" to="/d435i/depth/image_raw"/>
         <remap from="rgb/camera_info" to="/d435i/color/camera_info"/>
 
         <!-- Remapping T265 odometry topic -->
@@ -32,7 +33,7 @@
 
         <!-- Additional parameters for T265 -->
         <param name="visual_odometry" value="false"/> <!-- Use T265 odometry -->
-        <param name="odom_frame_id" value="camera_odom_frame"/>
+        <param name="odom_frame_id" value="odom"/>
     </node>
 
     <!-- Additional nodes for sensor drivers or data processing can be added here -->

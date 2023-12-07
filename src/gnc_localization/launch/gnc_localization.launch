@@ -1,3 +1,5 @@
 <launch>
-	<include file="$(find gnc_localization)/launch/gnc_global_ekf.launch"/>
+	<include file="$(find gnc_localization)/launch/gnc_ekf.launch"/>
+<!--	<include file="$(find gnc_localization)/launch/gnc_madgwick.launch"/>
+-->
 </launch>

@@ -1,7 +1,6 @@
 <launch>
     <!-- Node for move_base -->
     <node name="move_base" pkg="move_base" type="move_base" respawn="false" output="screen">
-        
         <!-- Load the global and local costmap parameters -->
         <rosparam file="$(find gnc_planner)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
         <rosparam file="$(find gnc_planner)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />

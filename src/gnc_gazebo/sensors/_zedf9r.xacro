@@ -39,7 +39,7 @@
 
         <gazebo>
             <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
-                <updateRate>30.0</updateRate>
+                <updateRate>10.0</updateRate>
                 <bodyName>${name}_link</bodyName>
                 <topicName>gps/fix</topicName>
                 <frameId>${name}_link</frameId>
@@ -49,7 +49,7 @@
             <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
                 <alwaysOn>true</alwaysOn>
                 <bodyName>${name}_link</bodyName>
-                <topicName>imu/data</topicName>
+                <topicName>imu/data_raw</topicName>
                 <serviceName>imu_service</serviceName>
                 <gaussianNoise>0.1</gaussianNoise>
                 <updateRate>30.0</updateRate>

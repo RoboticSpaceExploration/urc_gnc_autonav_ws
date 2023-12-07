@@ -19,5 +19,8 @@
     <!--node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /-->
 
     <include file="$(find gnc_control)/launch/gnc_control_simulation.launch"/>
-
+    
+    <node name="odom_to_tf_pub" pkg="gnc_gazebo" type="camera_odom.py" output="screen">
+	
+    </node>
 </launch>

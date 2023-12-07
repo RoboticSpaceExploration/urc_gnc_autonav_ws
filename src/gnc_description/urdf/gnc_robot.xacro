@@ -97,6 +97,20 @@
         </visual>
     </link>
 
+    <link name="magnetometer"/>
+    <gazebo>
+        <plugin name="GazeboRosMagnetic" filename="libhector_gazebo_ros_magnetic.so">
+	    <bodyName>magnetometer</bodyName>
+	    <topicName>/magnetometer/data</topicName>
+        </plugin>
+    </gazebo>
+
+    <joint name="mag_joint" type="fixed">
+        <origin xyz="-0.113 -0.0174 0.235" rpy="0 0 0"/>
+        <parent link="base_link"/>
+        <child link="magnetometer"/>
+    </joint>
+
     <gazebo reference="teleop_camera_link">
     <sensor type="camera" name="teleop_cam">
       <update_rate>30.0</update_rate>
@@ -120,6 +134,8 @@
           <stddev>0.007</stddev>
         </noise>
       </camera>
+
+
       <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
         <alwaysOn>true</alwaysOn>
         <updateRate>0.0</updateRate>
