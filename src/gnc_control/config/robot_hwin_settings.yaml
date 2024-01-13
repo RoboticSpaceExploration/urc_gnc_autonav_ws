@@ -5,11 +5,14 @@ wheel_hwin_settings:
   right_wheel:          ['wheel_Right_Front_joint', 'wheel_Right_Middle_joint', 'wheel_Right_Back_joint']
   left_wheel:           ['wheel_Left_Front_joint', 'wheel_Left_Middle_joint', 'wheel_Left_Back_joint']
   right_addr:           [ 128, 129, 130 ] # note: implement
-  left_addr:            [ 128, 129, 130 ] # note: implement
+  left_addr:            [ 131, 132, 133 ] # note: implement
+
+arm_hwin_settings:
+  joint_names:          ['base_to_shoulder_joint', 'shoulder_to_arm_joint', 'arm_to_yzwrist_joint', 'yzwrist_to_xywrist_joint', 'xywrist_to_xzwrist_joint', 'xzwrist_to_grip_joint']
 
 roboclaw_settings:
   serial_port:          "/dev/ttyTHS0"
   send_command_retries: 5
-  encoder_timeout_ms:   100
+  encoder_timeout_ms:   10
   loop_frequency:       60
   baud_rate:            115200

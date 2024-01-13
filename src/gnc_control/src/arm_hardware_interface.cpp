@@ -22,6 +22,7 @@ SOFTWARE. */
 #include <gnc_control/roboclaw.h>
 #include <stdlib.h>
 
+/*
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "arm_hardware_interface");
@@ -52,6 +53,7 @@ int main(int argc, char **argv)
 
     return 0;
 }
+*/
 
 ArmHardwareInterface::ArmHardwareInterface(ros::NodeHandle* nh)
 {
@@ -99,6 +101,7 @@ void ArmHardwareInterface::registerStateHandlers()
         armJoints[5], &pos[5], &vel[5], &eff[5]);
     jntStateInterface.registerHandle(stateHandleF);
 
+    ROS_INFO("Registering Joint Interfaces");
     registerInterface(&jntStateInterface);
 }
 void ArmHardwareInterface::registerJointVelocityHandlers()
@@ -127,6 +130,7 @@ void ArmHardwareInterface::registerJointVelocityHandlers()
         jntStateInterface.getHandle(armJoints[5]), &cmd[5]);
     jnt_vel_interface.registerHandle(vel_handle_f);
 
+    ROS_INFO("Registering Joint Command Interfaces");
     registerInterface(&jnt_vel_interface);
 }
 

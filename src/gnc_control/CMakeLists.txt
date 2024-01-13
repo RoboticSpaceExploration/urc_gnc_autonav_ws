@@ -149,14 +149,18 @@ include
 # # add_dependencies(robot_hardware_interface ${catkin_EXPORTED_TARGETS})
 # target_link_libraries(single_joint_hardware_interface ${catkin_LIBRARIES})
 
-add_executable(wheel_hardware_interface src/wheel_hardware_interface.cpp src/roboclaw.cpp)
-target_link_libraries(wheel_hardware_interface ${catkin_LIBRARIES})
+add_executable(control src/control.cpp src/robot_hardware_interface.cpp src/roboclaw.cpp)
+target_link_libraries(control ${catkin_LIBRARIES})
 link_directories(${catkin_LIBRARY_DIRS})
 
-add_executable(arm_hardware_interface src/arm_hardware_interface.cpp src/roboclaw.cpp)
-target_link_libraries(arm_hardware_interface ${catkin_LIBRARIES})
-link_directories(${catkin_LIBRARY_DIRS})
-
+#add_executable(wheel_hardware_interface src/wheel_hardware_interface.cpp src/roboclaw.cpp)
+#target_link_libraries(wheel_hardware_interface ${catkin_LIBRARIES})
+#link_directories(${catkin_LIBRARY_DIRS})
+#
+#add_executable(arm_hardware_interface src/arm_hardware_interface.cpp src/roboclaw.cpp)
+#target_link_libraries(arm_hardware_interface ${catkin_LIBRARIES})
+#link_directories(${catkin_LIBRARY_DIRS})
+#
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the

@@ -16,8 +16,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef GNC_CONTROL_ROBOCLAW_H
-#define GNC_CONTROL_ROBOCLAW_H
+#ifndef CR_CONTROL_ROBOCLAW_H
+#define CR_CONTROL_ROBOCLAW_H
 
 #include <ros/ros.h>
 #include <stdint.h>
@@ -26,22 +26,46 @@ SOFTWARE. */
 struct RoboclawSettings 
 {
     std::string serialPortAddress;
-    int addresses[8]; // 0x80 - 0x87
+    int addresses[8]; // 128 - 136
     int timeoutMs                    = 12;
     int retries                     = 3;
-    int maxBufferSize               = 100;
     int baudRate                    = 115200;
-    uint8_t m1Forward               = 0;
-    uint8_t m2Forward               = 4;
-    uint8_t m1Backward              = 1;
-    uint8_t m2Backward              = 5;
-    uint8_t m1ReadEncoderSpeed      = 18;
-    uint8_t m2ReadEncoderSpeed      = 19;
-    uint8_t m1Position = 119;
-    uint8_t m2Position = 120;
-    uint8_t maxEffortValue = 126;
+    const int maxBufferSize               = 100;
+    const uint8_t m1Forward               = 0;
+    const uint8_t m2Forward               = 4;
+    const uint8_t m1Backward              = 1;
+    const uint8_t m2Backward              = 5;
+    const uint8_t m1ReadEncoderPosition   = 16;
+    const uint8_t m2ReadEncoderPosition   = 17;
+    const uint8_t m1ReadEncoderSpeed      = 18;
+    const uint8_t m2ReadEncoderSpeed      = 19;
+    const uint8_t readMainBatteryVoltage  = 24;
+    const uint8_t m1DriveSpeed = 35;
+    const uint8_t m2DriveSpeed = 36;
+    const uint8_t m1DriveSpeedAccel = 38;
+    const uint8_t m2DriveSpeedAccel = 39;
+    const uint8_t readMotorCurrents = 49;
+    const uint8_t m1ReadPidQppsSettings   = 55; // PID and Quadrature Pulses Per Second
+    const uint8_t m2ReadPidQppsSettings   = 56;
+    const uint8_t m1Position = 119;
+    const uint8_t m2Position = 120;
+    const uint8_t maxEffortValue = 126;
     double loopFrequency            = 10;
     bool debugMode                  = false;
+};
+
+struct RoboclawPidQppsSettings
+{
+    float P;
+    float I;
+    float D;
+    uint32_t Qpps; // quadrature pulses per second
+};
+
+struct RoboclawMotorCurrents
+{
+    float m1Current;
+    float m2Current;
 };
 
 class Roboclaw 
@@ -58,8 +82,18 @@ class Roboclaw
     void ForwardM2(uint8_t address, uint8_t value);
     void BackwardM1(uint8_t address, uint8_t value);
     void BackwardM2(uint8_t address, uint8_t value);
-    void ReadEncoderSpeedM1(uint8_t address);
-    void ReadEncoderSpeedM2(uint8_t address);
+    void DriveSpeedM1(uint8_t address, int32_t speed);
+    void DriveSpeedM2(uint8_t address, int32_t speed);
+    void DriveSpeedAccelM1(uint8_t address, int32_t acceleration, int32_t speed);
+    void DriveSpeedAccelM2(uint8_t address, int32_t acceleration, int32_t speed);
+    RoboclawPidQppsSettings ReadPidQppsSettingsM1(uint8_t address);
+    RoboclawPidQppsSettings ReadPidQppsSettingsM2(uint8_t address);
+    float ReadMainBatteryVoltage(uint8_t address);
+    RoboclawMotorCurrents ReadMotorCurrents(uint8_t address);
+    int32_t ReadEncoderPositionM1(uint8_t address);
+    int32_t ReadEncoderPositionM2(uint8_t address);
+    int32_t ReadEncoderSpeedM1(uint8_t address);
+    int32_t ReadEncoderSpeedM2(uint8_t address);
     void SetPositionM1(uint8_t address, uint32_t value);
     void SetPositionM2(uint8_t address, int32_t value);
 
@@ -72,9 +106,13 @@ class Roboclaw
     int SendCommands(uint8_t* data, int writeBytes, int readBytes);
     double ConvertPulsesToRadians(double vel);
     uint8_t ScaleCommand(double cmd);
-    uint32_t ValidateChecksum(uint8_t* packet, int nBytes);
+    uint16_t CalculateChecksum(uint8_t* packet, int nBytes);
     uint32_t RecombineBuffer(uint8_t* buf);
-
+    void Copy_uint16_from_bytes(uint16_t& to, uint8_t* from);
+    void Copy_uint32_from_bytes(uint32_t& to, uint8_t* from);
+    void Copy_int16_from_bytes(int16_t& to, uint8_t* from);
+    void Copy_int32_from_bytes(int32_t& to, uint8_t* from);
+    void Copy_bytes_from_int32(uint8_t* to, int32_t from);
 
     termios tty;
     RoboclawSettings* settings;
@@ -86,4 +124,4 @@ class Roboclaw
     char errorBuf[256];     // used by strerror_r, thread safe
 };
 
-#endif  // GNC_CONTROL_ROBOCLAW_H
+#endif  // CR_CONTROL_ROBOCLAW_H

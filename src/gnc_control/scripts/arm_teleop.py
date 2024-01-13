@@ -7,6 +7,8 @@ import sys
 import tty
 from select import select
 
+
+# 0x80 = 128, 0x81 = 129, 0x82 = 130, 0x83 = 131, 0x84 = 132, 0x85 = 133, 0x86 = 134
 move_lookup = {
     'x':(0,0),
     'q':(0,100),

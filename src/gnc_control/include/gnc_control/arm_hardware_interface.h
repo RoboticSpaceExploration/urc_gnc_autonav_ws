@@ -42,7 +42,6 @@ private:
     double pos[6];
     double vel[6];
     double eff[6];
-    std::string armJoints[6] = {"left_joint","right_joint","shoulderToLittle","armToBot","armToEnd","endeffector"};
+    std::string armJoints[6];
     uint8_t linearActuatorIndex = 0;
-    // arm_settings *es;
 };

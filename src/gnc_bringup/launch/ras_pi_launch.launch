@@ -1,8 +1,0 @@
-<launch>
-    <include file="local_nodes.launch" />
-
-    <group>
-        <machine name="remote_machine" address="1.2.3.4" default="true" />
-        <include file="D435i.launch" />
-    </group>
-</launch>

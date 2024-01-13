@@ -1,4 +1,0 @@
-<launch>
-	<include file="$(find gnc_bringup)/launch/gnc_core.launch"/>
-	<include file="$(find gnc_gazebo)/launch/gnc_gazebo.launch"/>
-</launch>
