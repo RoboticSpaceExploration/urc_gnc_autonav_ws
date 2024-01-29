@@ -6,9 +6,8 @@
         <param name="odom_frame_id" value="odom"/>
         <param name="map_frame_id" value="map"/>
         <param name="subscribe_depth" value="true"/>
-        <param name="subscribe_rgb" value="true"/>
+        <param name="subscribe_rgbd" value="false"/>
         <param name="subscribe_scan" value="false"/>
-        <param name="subscribe_odom_info" value="false"/>
 	<param name="publish_tf" value="false"/>
 
         <!-- RTAB-Map specific parameters -->
@@ -23,17 +22,16 @@
         <param name="Grid/RangeMin" value="0.3"/>
         <param name="Grid/RangeMax" value="5.0"/>
 
-        <!-- Remapping D435i camera topics -->
-        <remap from="rgb/image" to="/d435i/color/image_raw"/>
-        <remap from="depth/image" to="/d435i/depth/image_raw"/>
-        <remap from="rgb/camera_info" to="/d435i/color/camera_info"/>
+        <!-- Remapping ZED camera topics -->
+        <remap from="rgb/image" to="/ZEDMini/color/image_raw"/>
+        <remap from="depth/image" to="/ZEDMini/depth/image_raw"/>
+        <remap from="rgb/camera_info" to="/ZEDMini/color/camera_info"/>
 
-        <!-- Remapping T265 odometry topic -->
-        <remap from="odom" to="/t265/odom/sample"/>
+        <!-- Remapping ZED odometry topic -->
+        <remap from="odom" to="/ZEDMini/odom/sample"/>
 
-        <!-- Additional parameters for T265 -->
+        <!-- Additional parameters for ZED -->
         <param name="visual_odometry" value="false"/> <!-- Use T265 odometry -->
-        <param name="odom_frame_id" value="odom"/>
     </node>
 
     <!-- Additional nodes for sensor drivers or data processing can be added here -->

@@ -6,4 +6,4 @@ TrajectoryPlannerROS:
    acc_lim_x: 2.5
    acc_lim_theta: 3.2
    holonomic_robot: false
-
+   controller_frequency: 10.0

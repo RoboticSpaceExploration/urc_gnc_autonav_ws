@@ -6,7 +6,8 @@ from nav_msgs.msg import Odometry
 # Global variable to store the last processed timestamp
 last_processed_time = None
 # Define a minimum time difference threshold (in seconds)
-time_threshold = 0.1
+#time_threshold = 0.05
+time_threshold = 0.02
 
 def odom_callback(msg):
     global last_processed_time
@@ -33,7 +34,8 @@ def odom_callback(msg):
     br.sendTransform(
         (position.x, position.y, position.z),
         (orientation.x, orientation.y, orientation.z, orientation.w),
-        rospy.Time.now(),
+        #rospy.Time.now(),
+        msg.header.stamp,
         "base_link",
         "odom"
     )
@@ -43,7 +45,7 @@ def odom_listener():
     rospy.init_node('odom_to_tf_publisher')
 
     # Subscribe to the odometry topic
-    rospy.Subscriber('/t265/odom/sample', Odometry, odom_callback)
+    rospy.Subscriber('/ZEDMini/odom/sample', Odometry, odom_callback)
 
     # Spin to keep the script from exiting
     rospy.spin()

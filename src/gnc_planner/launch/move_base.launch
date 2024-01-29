@@ -2,17 +2,16 @@
     <!-- Node for move_base -->
     <node name="move_base" pkg="move_base" type="move_base" respawn="false" output="screen">
         <!-- Load the global and local costmap parameters -->
-        <rosparam file="$(find gnc_planner)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
         <rosparam file="$(find gnc_planner)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+	<rosparam file="$(find gnc_planner)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
         <rosparam file="$(find gnc_planner)/config/global_costmap_params.yaml" command="load" />
         <rosparam file="$(find gnc_planner)/config/local_costmap_params.yaml" command="load" />
-        
-        <!-- Load the base local planner parameters -->
         <rosparam file="$(find gnc_planner)/config/base_local_planner_params.yaml" command="load" />
         
-        <!-- Load other move_base parameters -->
+	<!-- Load other move_base parameters -->
         <rosparam file="$(find gnc_planner)/config/move_base_params.yaml" command="load" />
-
+	<remap from="/cmd_vel" to="/gnc_robot/gnc_robot_velocity_controller/cmd_vel"/>
+	<remap from="/odom" to="/odometry/filtered"/>
     </node>
 </launch>
 

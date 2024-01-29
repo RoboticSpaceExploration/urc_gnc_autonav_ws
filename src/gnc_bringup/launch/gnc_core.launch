@@ -2,5 +2,5 @@
 <launch>
 	<include file="$(find gnc_description)/launch/gnc_description.launch"/>
 	<include file="$(find gnc_localization)/launch/gnc_localization.launch"/>
-	<include file="$(find gnc_mapping)/launch/gnc_rtabmap_noetic.launch"/>
+	<include file="$(find gnc_mapping)/launch/gnc_rtabmap_noetic.launch"/> 
 </launch>
