@@ -1,31 +1,46 @@
 <launch>
+ 
+    <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_sync/rgbd_sync" output="screen">
+      <remap from="rgb/image"       to="/ZEDMini/color/image_raw"/>
+      <remap from="depth/image"     to="/ZEDMini/depth/image_raw"/>
+      <remap from="rgb/camera_info" to="/ZEDMini/color/camera_info"/>
+      <remap from="rgbd_image"      to="/ZEDMini/rgbd_image"/> <!-- output -->
+      
+      <!-- Should be true for not synchronized camera topics 
+           (e.g., false for kinectv2, zed, realsense, true for xtion, kinect360)-->
+      <param name="approx_sync"       value="true"/> 
+    </node>
+
+
     <!-- Node to launch RTAB-Map -->
-    <node name="rtabmap" pkg="rtabmap_slam" type="rtabmap" output="screen">
+    <node name="rtabmap" pkg="rtabmap_slam" args="-d" type="rtabmap" output="screen">
         <!-- Common parameters -->
-        <param name="frame_id" value="base_link"/>
+	<param name="frame_id" value="base_link"/>
+        <!--
         <param name="odom_frame_id" value="odom"/>
         <param name="map_frame_id" value="map"/>
-        <param name="subscribe_depth" value="true"/>
-        <param name="subscribe_rgbd" value="false"/>
+        -->
+
+	
+	<param name="subscribe_depth" value="false"/>
+        <param name="subscribe_rgbd" value="true"/>
         <param name="subscribe_scan" value="false"/>
 	<param name="publish_tf" value="false"/>
 
         <!-- RTAB-Map specific parameters -->
-        <param name="Rtabmap/DetectionRate" value="1"/>
-        <param name="Rtabmap/MaxMappingNodes" value="-1"/>
-        <param name="RGBD/LinearUpdate" value="0.1"/>
-        <param name="RGBD/AngularUpdate" value="0.1"/>
+        <param name="RGBD/LinearUpdate" value="0.01"/>
+        <param name="RGBD/AngularUpdate" value="0.01"/>
+	<param name="Rtabmap/DetectionRate" value="5"/>
 
-        <!-- Mapping parameters -->
-        <param name="Grid/FromDepth" value="true"/>
-        <param name="Grid/Resolution" value="0.05"/>
-        <param name="Grid/RangeMin" value="0.3"/>
-        <param name="Grid/RangeMax" value="5.0"/>
-
+<!--	
+	<param name="Grid/MinGroundHeight" value="0"/>
+	<param name="Grid/ClusterRadius" value="0.3"/>
+	<param name="Grid/GridGlobal" value="1.5"/>
+-->
+	<param name="Grid/RangeMin" value="0.2"/>
+	
         <!-- Remapping ZED camera topics -->
-        <remap from="rgb/image" to="/ZEDMini/color/image_raw"/>
-        <remap from="depth/image" to="/ZEDMini/depth/image_raw"/>
-        <remap from="rgb/camera_info" to="/ZEDMini/color/camera_info"/>
+	<remap from="rgbd_image" to="/ZEDMini/rgbd_image"/>
 
         <!-- Remapping ZED odometry topic -->
         <remap from="odom" to="/ZEDMini/odom/sample"/>

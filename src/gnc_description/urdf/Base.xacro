@@ -16,7 +16,7 @@
             <visual>
                 <origin xyz="${originBaseX} ${originBaseY} ${originBaseZ}" rpy="0 0 0"/>
                 <geometry>
-                    <mesh filename="package://gnc_gazebo/mesh/chassis.stl"/>
+                    <mesh filename="package://gnc_description/mesh/chassis.stl"/>
                 </geometry>
             </visual>
             <collision>

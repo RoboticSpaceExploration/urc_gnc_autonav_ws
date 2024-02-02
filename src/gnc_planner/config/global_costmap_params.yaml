@@ -1,12 +1,24 @@
 global_costmap:
    global_frame: map
    robot_base_frame: base_link
-   update_frequency: 1.0
+   
+   update_frequency: 0.5
    publish_frequency: 0.5
-   static_map: true
+   transform_tolerance: 5.0
+
    width: 10.0
    height: 10.0
    resolution: 0.05
-   static_map: true
    rolling_window: false
+   static_map: true
+
    map_topic: "/grid_map"
+
+   inflation_radius: 0.1
+
+   plugins:
+           - {name: static_layer, type: "costmap_2d::StaticLayer"}
+           - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
+
+
+          

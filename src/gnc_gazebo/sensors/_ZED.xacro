@@ -30,6 +30,7 @@
     	<joint name="${name}_${parent}_joint" type="fixed">
 		<parent link="${parent}"/>
 		<child link="${name}"/>
+		<origin xyz="0.6 0 0 " rpy="0 0 0 "/>
 	</joint>
 
 	<joint name="${name}_imu_joint" type="fixed">
@@ -40,7 +41,7 @@
 	<link name="${name}_optical_frame"/>
 
 	<joint name="${name}_optical_joint" type="fixed">
-		<parent link="${parent}"/>
+		<parent link="${name}"/>
 		<child link="${name}_optical_frame"/>
 		<origin xyz="0 0 0" rpy="1.5708 0 0"/>
 	</joint>

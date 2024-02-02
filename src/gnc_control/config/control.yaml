@@ -6,8 +6,8 @@ gnc_robot:
   # parameters for the diff drive controller aka wheel velocity controller.
   gnc_robot_velocity_controller: 
     type: "diff_drive_controller/DiffDriveController"
-    right_wheel: ['wheel_Right_Front_joint', 'wheel_Right_Middle_joint', 'wheel_Right_Back_joint']
-    left_wheel: ['wheel_Left_Front_joint', 'wheel_Left_Middle_joint', 'wheel_Left_Back_joint']
+    right_wheel: ['wheel_Right_Front_joint', 'wheel_Right_Back_joint']
+    left_wheel: ['wheel_Left_Front_joint', 'wheel_Left_Back_joint']
     publish_rate: 50.0
     pose_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.03]
     twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.03]

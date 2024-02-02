@@ -12,6 +12,7 @@
     <!-- Navsat Transform Node -->
     <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform">
         <param name="zero_altitude" value="true"/>
+	<param name="broadcast_utm_transform" value="true"/>
         <param name="published_frame" value="odom"/>
 	<param name="yaw_offset" value="1.5708"/>
         <remap from="imu/data" to="/imu/data_raw"/>
