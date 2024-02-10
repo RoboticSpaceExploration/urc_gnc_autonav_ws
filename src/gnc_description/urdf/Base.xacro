@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="base">
     <!-- This is values for the base of the robot -->
-    <xacro:property name="baseLength" value="0.86" />
-    <xacro:property name="baseWidth" value="0.67" />
+    <xacro:property name="baseLength" value="0.779" />
+    <xacro:property name="baseWidth" value="0.780" />
     <xacro:property name="baseHeight" value="0.53" />
 
     <xacro:property name="originBaseX" value="0" />

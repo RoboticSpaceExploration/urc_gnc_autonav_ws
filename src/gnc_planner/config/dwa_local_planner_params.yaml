@@ -20,10 +20,10 @@ DWAPlannerROS:
   vx_samples: 20              # Number of velocity samples in the x direction
   vy_samples: 10               # Number of velocity samples in the y direction, often 0 for non-holonomic robots
   vth_samples: 20             # Number of velocity samples for theta (angular velocity)
-  controller_frequency: 20.0  # Frequency to run the controller (Hz)
+  controller_frequency: 10  # Frequency to run the controller (Hz)
 
   # Costmap and obstacle parameters
-  global_frame_id: "odom"     # Frame ID for the global map
+  global_frame_id: "map"     # Frame ID for the global map
   robot_base_frame: "base_link" # Frame ID of the robot base
   #costmap_converter_plugin: "" # Plugin for converting costmaps, if used
   #costmap_converter_spin_thread: true # Whether the costmap converter should run in its own thread

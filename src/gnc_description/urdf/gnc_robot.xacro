@@ -6,11 +6,11 @@
     <xacro:include filename="material.xacro" />
 
     <!-- Wheel Origin Values -->
-    <xacro:property name="LeftWheelXOrigin" value="-.32"/>
-    <xacro:property name="RightWheelXOrigin" value=".32"/>
+    <xacro:property name="LeftWheelXOrigin" value="-.37"/>
+    <xacro:property name="RightWheelXOrigin" value=".37"/>
 
-    <xacro:property name="BackWheelYOrigin" value="-.38"/>
-    <xacro:property name="FrontWheelYOrigin" value=".38"/>
+    <xacro:property name="BackWheelYOrigin" value="-.37"/>
+    <xacro:property name="FrontWheelYOrigin" value=".37"/>
 
     <xacro:property name="wheelMass" value="0.7"/>
 

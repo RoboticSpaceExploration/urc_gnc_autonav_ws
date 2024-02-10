@@ -1,13 +1,13 @@
 base_local_planner: "base_local_planner/TrajectoryPlannerROS"
 base_global_planner: "navfn/NavfnROS"
 TrajectoryPlannerROS:
-   max_vel_x: 0.5
+   max_vel_x: 1.0
    min_vel_x: 0.0
    max_vel_theta: 1.0
    min_in_place_vel_theta: 0.5
    acc_lim_x: 10.0
    acc_lim_theta: 10.0
-   holonomic_robot: true 
+   holonomic_robot: false 
    controller_frequency: 20.0
    
    

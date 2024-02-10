@@ -1,18 +1,21 @@
 digraph G {
+"base_link" -> "wheel_Left_Back_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10.204\nBuffer length: 4.9\nMost recent transform: 22.421\nOldest transform: 17.521\n"];
+"odom" -> "base_link"[label=" Broadcaster: /odom_to_tf_pub\nAverage rate: 26.113\nBuffer length: 4.94\nMost recent transform: 22.479\nOldest transform: 17.539\n"];
+"base_link" -> "wheel_Left_Front_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10.204\nBuffer length: 4.9\nMost recent transform: 22.421\nOldest transform: 17.521\n"];
+"base_link" -> "wheel_Right_Back_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10.204\nBuffer length: 4.9\nMost recent transform: 22.421\nOldest transform: 17.521\n"];
+"base_link" -> "wheel_Right_Front_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10.204\nBuffer length: 4.9\nMost recent transform: 22.421\nOldest transform: 17.521\n"];
+"map" -> "utm"[label=" Broadcaster: /navsat_transform\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"world" -> "map"[label=" Broadcaster: /world_link_broadcaster\nAverage rate: 50.02\nBuffer length: 4.978\nMost recent transform: 22.524\nOldest transform: 17.546\n"];
 "base_link" -> "ZEDMini"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
-"base_link" -> "arm_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"base_link" -> "ZEDMini_imu_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"base_link" -> "ZEDMini_optical_depth_frame"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"ZEDMini" -> "ZEDMini_optical_frame"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
 "base_link" -> "magnetometer"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
 "base_link" -> "teleop_camera_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
 "base_link" -> "zed_Sensor_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
-"world" -> "map"[label=" Broadcaster: /world_link_broadcaster\nAverage rate: 49.859\nBuffer length: 4.974\nMost recent transform: 2669.673\nOldest transform: 2664.699\n"];
-"base_link" -> "wheel_Left_Back_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10.204\nBuffer length: 4.9\nMost recent transform: 2669.642\nOldest transform: 2664.742\n"];
-"base_link" -> "wheel_Left_Front_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10.204\nBuffer length: 4.9\nMost recent transform: 2669.642\nOldest transform: 2664.742\n"];
-"base_link" -> "wheel_Left_Middle_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10.204\nBuffer length: 4.9\nMost recent transform: 2669.642\nOldest transform: 2664.742\n"];
-"base_link" -> "wheel_Right_Back_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10.204\nBuffer length: 4.9\nMost recent transform: 2669.642\nOldest transform: 2664.742\n"];
-"base_link" -> "wheel_Right_Front_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10.204\nBuffer length: 4.9\nMost recent transform: 2669.642\nOldest transform: 2664.742\n"];
-"base_link" -> "wheel_Right_Middle_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10.204\nBuffer length: 4.9\nMost recent transform: 2669.642\nOldest transform: 2664.742\n"];
+"map" -> "odom"[label=" Broadcaster: /ekf_localization\nAverage rate: 20.243\nBuffer length: 4.94\nMost recent transform: 22.599\nOldest transform: 17.659\n"];
 edge [style=invis];
  subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
-"Recorded at time: 2669.67"[ shape=plaintext ] ;
-}->"base_link";
+"Recorded at time: 22.527"[ shape=plaintext ] ;
+}->"world";
 }
