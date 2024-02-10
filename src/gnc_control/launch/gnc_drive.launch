@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+
+    <rosparam command="load" file="$(find gnc_control)/config/drive_hwin_settings.yaml"/>
+    <rosparam command="load" file="$(find gnc_control)/config/controller_manager_settings.yaml"/>
+    
+    <node name="drive_node" pkg="gnc_control" type="drive_node" output="screen"/>
+
+	<node name="controller_manager_node"  
+        pkg="controller_manager" 
+        type="spawner" 
+        output="screen" 
+        args="/gnc_robot/gnc_drive_joint_publisher 
+        /gnc_robot/gnc_drive_velocity_controller"/>
+    
+
+</launch>

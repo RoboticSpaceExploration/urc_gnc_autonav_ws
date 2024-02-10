@@ -5,7 +5,6 @@
 #include <vector>
 #include <string>
 #include <math.h>
-#include <cstdlib>
 
 void GetYamlParameters(ros::NodeHandle*, RobotHwinSettings*, RoboclawSettings*);
 bool validateSettingsAndLogErrors(RobotHwinSettings*);
@@ -33,7 +32,6 @@ int main(int argc, char **argv)
     ROS_INFO("Initializing roboclaw interface");
     Roboclaw roboclaw(&roboclawSettings);
     ros::Rate rate(robotSettings.rosLoopRate);
-    sleep(2);
 
     while (ros::ok()) {
         robotHwin.read(&roboclaw);
