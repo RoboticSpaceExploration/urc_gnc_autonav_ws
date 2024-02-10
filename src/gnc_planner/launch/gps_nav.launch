@@ -1,0 +1,5 @@
+<launch>
+	
+	<node pkg="gnc_planner" type="gps2utm_transform.py" name="gps2utm_node"/>
+	<node pkg="gnc_planner" type="gps_goals.py" name="gps_goal_publisher"/>
+</launch>

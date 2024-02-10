@@ -22,15 +22,13 @@ gnc_robot:
     wheel_radius_multiplier    : 1.0 # default: 1.0
 
 
-
-
     # Velocity and acceleration limits
     # Whenever a min_* is unspecified, default to -max_*
     linear:
       x:
         has_velocity_limits    : true
-        max_velocity           :  2.0  # m/s
-        min_velocity           : -2.0 # m/s
+        max_velocity           :  6.0  # m/s
+        min_velocity           : -6.0 # m/s
         has_acceleration_limits: true
         max_acceleration       :  20.0  # m/s^2
         min_acceleration       : -20.0 # m/s^2
@@ -47,7 +45,27 @@ gnc_robot:
     # world_frame: odom 
     #frequency: 50
 
+        #gazebo_ros_control:   
+        #  pid_gains:
+        #    wheel_Left_Front_joint:
+        #      p: 100.0
+        #      i: 0.01 
+        #      d: 10.0
 
+        #    wheel_Right_Front_joint:
+        #      p: 100.0
+        #      i: 0.01 
+        #      d: 10.0
+
+        #    wheel_Left_Back_joint:
+        #      p: 100.0
+        #      i: 0.01 
+        #      d: 10.0
+
+        #    wheel_Right_Back_joint:
+        #      p: 100.0
+        #      i: 0.01 
+        #      d: 10.0
 
     #Publish all joint states -----------------------------------
     # joint_state_controller:

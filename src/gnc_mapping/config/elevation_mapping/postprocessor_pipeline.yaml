@@ -1,0 +1,93 @@
+postprocessor_pipeline: # set by postprocessor_pipeline_name
+  - name: first
+    type: gridMapFilters/MockFilter
+    params:
+      processing_time: 100
+      print_name: true
+  - name: buffer_normalizer
+    type: gridMapFilters/BufferNormalizerFilter
+
+  # Delete color layer.
+  - name: delete_original_layers
+    type: gridMapFilters/DeletionFilter
+    params:
+      layers: [color] # List of layers.
+
+  # Fill holes in the map with inpainting.
+  - name: inpaint
+    type: gridMapCv/InpaintFilter
+    params:
+      input_layer: elevation
+      output_layer: elevation_inpainted
+      radius: 0.05
+
+  # Reduce noise with a radial blurring filter.
+  - name: mean_in_radius
+    type: gridMapFilters/MeanInRadiusFilter
+    params:
+      input_layer: elevation_inpainted
+      output_layer: elevation_smooth
+      radius: 0.06
+
+  # Compute surface normals.
+  - name: surface_normals
+    type: gridMapFilters/NormalVectorsFilter
+    params:
+      input_layer: elevation_inpainted
+      output_layers_prefix: normal_vectors_
+      radius: 0.2
+      normal_vector_positive_axis: z
+
+  # Add a color layer for visualization based on the surface normal.
+  - name: normal_color_map
+    type: gridMapFilters/NormalColorMapFilter
+    params:
+      input_layers_prefix: normal_vectors_
+      output_layer: normal_color
+
+  # Compute slope from surface normal.
+  - name: slope
+    type: gridMapFilters/MathExpressionFilter
+    params:
+      output_layer: slope
+      expression: acos(normal_vectors_z)
+
+  # Compute roughness as absolute difference from map to smoothened map.
+  - name: roughness
+    type: gridMapFilters/MathExpressionFilter
+    params:
+      output_layer: roughness
+      expression: abs(elevation_inpainted - elevation_smooth)
+
+  # Compute traversability as normalized weighted sum of slope and roughness.
+  - name: traversability
+    type: gridMapFilters/MathExpressionFilter
+    params:
+      output_layer: traversability
+      expression: 0.5 * (1.0 - (slope / 0.6)) + 0.5 * (1.0 - (roughness / 0.1))
+
+  # Set lower threshold on traversability.
+  - name: traversability_lower_threshold
+    type: gridMapFilters/ThresholdFilter
+    params:
+      condition_layer: traversability
+      output_layer: traversability
+      lower_threshold: 0.0
+      set_to: 0.0
+
+  # Set upper threshold on traversability.
+  - name: traversability_upper_threshold
+    type: gridMapFilters/ThresholdFilter
+    params:
+      condition_layer: traversability
+      output_layer: traversability
+      upper_threshold: 1.0
+      set_to: 1.0 # Other uses: .nan, .inf
+      
+     
+  - name: traversability_invert
+    type: gridMapFilters/MathExpressionFilter
+    params:
+      output_layer: traversability
+      expression: 1.0 - traversability
+

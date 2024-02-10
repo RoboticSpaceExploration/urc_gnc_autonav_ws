@@ -1,0 +1,36 @@
+base_local_planner: "dwa_local_planner/DWAPlannerROS"
+DWAPlannerROS:
+  # Robot configuration parameters
+  max_vel_x: 1.0              # Maximum velocity in the x direction (m/s)
+  min_vel_x: 0.1              # Minimum velocity in the x direction (m/s)
+  max_vel_y: 0.2              # Maximum velocity in the y direction (m/s), often 0 for non-holonomic robots
+  min_vel_y: 0.0              # Minimum velocity in the y direction (m/s), often 0 for non-holonomic robots
+  max_vel_trans: 1.5          # Maximum translational velocity (m/s)
+  min_vel_trans: 0.1          # Minimum translational velocity (m/s)
+  max_vel_rot: 1.0            # Maximum rotational velocity (rad/s)
+  min_vel_rot: 0.4            # Minimum rotational velocity (rad/s)
+
+  # Goal tolerance parameters
+  yaw_goal_tolerance: 0.1    # Allowable error in the yaw direction (radians)
+  xy_goal_tolerance: 0.2     # Allowable error in the x and y directions (meters)
+  latch_xy_goal_tolerance: false # Whether to latch to the goal tolerance until goal is reached
+
+  # Forward simulation parameters
+  sim_time: 1.5               # Time to forward-simulate trajectories (seconds)
+  vx_samples: 20              # Number of velocity samples in the x direction
+  vy_samples: 10               # Number of velocity samples in the y direction, often 0 for non-holonomic robots
+  vth_samples: 20             # Number of velocity samples for theta (angular velocity)
+  controller_frequency: 20.0  # Frequency to run the controller (Hz)
+
+  # Costmap and obstacle parameters
+  global_frame_id: "odom"     # Frame ID for the global map
+  robot_base_frame: "base_link" # Frame ID of the robot base
+  #costmap_converter_plugin: "" # Plugin for converting costmaps, if used
+  #costmap_converter_spin_thread: true # Whether the costmap converter should run in its own thread
+  
+  # Other parameters
+  acc_lim_x: 2.5              # Acceleration limit in the x direction (m/s^2)
+  acc_lim_y: 0.0              # Acceleration limit in the y direction (m/s^2), often 0 for non-holonomic robots
+  acc_lim_theta: 3.2          # Acceleration limit for rotation (rad/s^2)
+  
+  track_unknown_space: true

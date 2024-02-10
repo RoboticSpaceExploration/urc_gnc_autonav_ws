@@ -48,7 +48,6 @@ class GPSGoalNode:
         utm_point.header.frame_id = 'utm'
         utm_point.pose.position.x = utm_conversion[0]  # UTM easting
         utm_point.pose.position.y = utm_conversion[1]  # UTM northing
-        # For simplicity, we're not using altitude and setting a default orientation
         utm_point.pose.orientation.w = 1.0
         return utm_point
 
