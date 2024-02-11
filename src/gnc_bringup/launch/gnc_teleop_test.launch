@@ -1,7 +1,0 @@
-
-<launch>
-	<include file="$(find gnc_bringup)/launch/gnc_core.launch"/>
-	<include file="$(find gnc_hardware)/launch/zedf9r.launch"/>
-	<include file="$(find gnc_mapping)/launch/gnc_rtabmap2.launch"/>
-	<include file="$(find zed_wrapper)/launch/zedm.launch"/>
-</launch>
