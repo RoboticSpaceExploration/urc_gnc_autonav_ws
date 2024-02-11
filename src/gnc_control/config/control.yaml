@@ -6,14 +6,14 @@ gnc_robot:
   # parameters for the diff drive controller aka wheel velocity controller.
   gnc_wheel_velocity_controller: 
     type: "diff_drive_controller/DiffDriveController"
-    right_wheel: ['wheel_Right_Front_joint', 'wheel_Right_Middle_joint', 'wheel_Right_Back_joint']
-    left_wheel: ['wheel_Left_Front_joint', 'wheel_Left_Middle_joint', 'wheel_Left_Back_joint']
+    right_wheel: ['wheel_Right_Front_joint', 'wheel_Right_Back_joint']
+    left_wheel: ['wheel_Left_Front_joint', 'wheel_Left_Back_joint']
     publish_rate: 50.0
     pose_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.03]
     twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.03]
     cmd_vel_timeout: 0.05
-    wheel_radius: 0.09
-    wheel_separation: 0.66
+    wheel_radius: 0.08
+    wheel_separation: 0.78
     enable_odom_tf: false
     base_frame_id: base_link
 
@@ -22,15 +22,13 @@ gnc_robot:
     wheel_radius_multiplier    : 1.0 # default: 1.0
 
 
-
-
     # Velocity and acceleration limits
     # Whenever a min_* is unspecified, default to -max_*
     linear:
       x:
         has_velocity_limits    : true
-        max_velocity           :  2.0  # m/s
-        min_velocity           : -2.0 # m/s
+        max_velocity           :  6.0  # m/s
+        min_velocity           : -6.0 # m/s
         has_acceleration_limits: true
         max_acceleration       :  20.0  # m/s^2
         min_acceleration       : -20.0 # m/s^2
@@ -47,7 +45,27 @@ gnc_robot:
     # world_frame: odom 
     #frequency: 50
 
+        #gazebo_ros_control:   
+        #  pid_gains:
+        #    wheel_Left_Front_joint:
+        #      p: 100.0
+        #      i: 0.01 
+        #      d: 10.0
 
+        #    wheel_Right_Front_joint:
+        #      p: 100.0
+        #      i: 0.01 
+        #      d: 10.0
+
+        #    wheel_Left_Back_joint:
+        #      p: 100.0
+        #      i: 0.01 
+        #      d: 10.0
+
+        #    wheel_Right_Back_joint:
+        #      p: 100.0
+        #      i: 0.01 
+        #      d: 10.0
 
     #Publish all joint states -----------------------------------
     # joint_state_controller:

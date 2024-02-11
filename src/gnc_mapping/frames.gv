@@ -1,0 +1,21 @@
+digraph G {
+"base_link" -> "ZEDMini"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"odom" -> "base_link"[label=" Broadcaster: /odom_to_tf_pub\nAverage rate: 32.2\nBuffer length: 5.0\nMost recent transform: 299.669\nOldest transform: 294.669\n"];
+"base_link" -> "ZEDMini_imu_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"base_link" -> "ZEDMini_optical_depth_frame"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"ZEDMini" -> "ZEDMini_optical_frame"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"base_link" -> "magnetometer"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"base_link" -> "teleop_camera_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"base_link" -> "zed_Sensor_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"map" -> "utm"[label=" Broadcaster: /navsat_transform\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"world" -> "map"[label=" Broadcaster: /world_link_broadcaster\nAverage rate: 49.97\nBuffer length: 4.963\nMost recent transform: 299.7\nOldest transform: 294.737\n"];
+"map" -> "odom"[label=" Broadcaster: /ekf_localization\nAverage rate: 20.161\nBuffer length: 4.96\nMost recent transform: 299.79\nOldest transform: 294.83\n"];
+"base_link" -> "wheel_Left_Back_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10.204\nBuffer length: 4.9\nMost recent transform: 299.638\nOldest transform: 294.738\n"];
+"base_link" -> "wheel_Left_Front_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10.204\nBuffer length: 4.9\nMost recent transform: 299.638\nOldest transform: 294.738\n"];
+"base_link" -> "wheel_Right_Back_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10.204\nBuffer length: 4.9\nMost recent transform: 299.638\nOldest transform: 294.738\n"];
+"base_link" -> "wheel_Right_Front_link"[label=" Broadcaster: /robot_state_publisher\nAverage rate: 10.204\nBuffer length: 4.9\nMost recent transform: 299.638\nOldest transform: 294.738\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 299.7"[ shape=plaintext ] ;
+}->"world";
+}

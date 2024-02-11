@@ -1,0 +1,4 @@
+<launch>
+	<include file="$(find gnc_gazebo)/launch/gnc_gazebo.launch"/>
+	<include file="$(find gnc_description)/launch/gnc_rviz.launch"/>
+</launch>

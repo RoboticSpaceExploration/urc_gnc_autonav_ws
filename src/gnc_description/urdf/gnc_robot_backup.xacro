@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="protobot">
+    <!-- Includes files to build the robot -->
+    <xacro:include filename="Base.xacro" />
+    <xacro:include filename="Wheel.xacro" />
+    <xacro:include filename="material.xacro" />
+
+    <!-- Wheel Origin Values -->
+    <xacro:property name="LeftWheelXOrigin" value="-.32"/>
+    <xacro:property name="RightWheelXOrigin" value=".32"/>
+
+    <xacro:property name="BackWheelYOrigin" value="-.38"/>
+    <xacro:property name="MiddleWheelYOrigin" value="0"/>
+    <xacro:property name="FrontWheelYOrigin" value=".38"/>
+
+    <xacro:property name="wheelMass" value="0.7"/>
+
+    <xacro:property name="baseMass" value="20"/>
+
+    <!-- Base of the robot -->
+    <xacro:base name="base" mass="${baseMass}"/>
+
+    <!-- Left Side of the wheels -->
+    <xacro:wheel name="wheel_Right_Front"  mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${FrontWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Right_Middle" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${MiddleWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Right_Back" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${BackWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
+
+    <!-- Right Side of the wheels -->
+    <xacro:wheel name="wheel_Left_Front" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${FrontWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Left_Middle" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${MiddleWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
+    <xacro:wheel name="wheel_Left_Back" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${BackWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
+
+    <!-- Camera -->
+
+    <xacro:include filename="$(find gnc_gazebo)/sensors/_d435i.xacro" />
+    <xacro:include filename="$(find gnc_gazebo)/sensors/_T265.xacro"/>
+    <xacro:arg name="use_nominal_extrinsics" default="True" />
+
+    <xacro:realsense_d435 sensor_name="d435i" parent_link="base_link" rate="60.0">
+        <origin xyz="0.20 0 0.1805" rpy="0 0 0"/>
+    </xacro:realsense_d435>
+
+    <xacro:realsense_T265 sensor_name="t265" parent_link="base_link" rate="60.0">
+        <origin rpy="0 0 0" xyz="0 0 0.15"/>
+    </xacro:realsense_T265>
+
+    <!-- IMU GPS -->
+    <!--    <xacro:include filename="$(find gnc_gazebo)/sensors/_zedf9r.xacro"/>
+        <xacro:Sparkfun_zedf9r name="zed_Sensor" parentLink="base_link">
+            <origin rpy="0 0 0" xyz="0 0 0.15"/>
+        </xacro:Sparkfun_zedf9r>
+	-->
+
+    <!-- Gazebo code for protobot -->
+    <gazebo>
+        <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
+        <robotNamespace>gnc_robot</robotNamespace>
+        </plugin>
+    </gazebo>
+    <gazebo>
+        <plugin name="gazebo_ros_joint_state_publisher"
+            filename="libgazebo_ros_joint_state_publisher.so">
+            <update_rate>20</update_rate>
+            <joint_name>wheel_Left_Front_joint</joint_name>
+            <joint_name>wheel_Left_Middle_joint</joint_name>
+            <joint_name>wheel_Left_Back_joint</joint_name>
+            <joint_name>wheel_Right_Front_joint</joint_name>
+            <joint_name>wheel_Right_Middle_joint</joint_name>
+            <joint_name>wheel_Right_Back_joint</joint_name>
+        </plugin>
+    </gazebo>
+    <gazebo>
+        <plugin name="gazebo_ros_joint_pose_trajectory"
+            filename="libgazebo_ros_joint_pose_trajectory.so">
+            <update_rate>2</update_rate>
+        </plugin>
+    </gazebo>
+
+    <joint name="teleop_camera_joint" type="fixed">
+    <origin xyz="-0.181 0.19 0.695" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="teleop_camera_link"/>
+    </joint>
+
+    <link name="teleop_camera_link"/>
+
+    <joint name="arm_joint" type="fixed">
+        <origin xyz="-0.113 -0.0174 0.235" rpy="0 0 0"/>
+        <parent link="base_link"/>
+        <child link="arm_link"/>
+    </joint>
+
+    <link name="arm_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://gnc_gazebo/mesh/arm.stl"/>
+            </geometry>
+        </visual>
+    </link>
+
+    <gazebo reference="teleop_camera_link">
+    <sensor type="camera" name="teleop_cam">
+      <update_rate>30.0</update_rate>
+      <camera name="teleop_cam">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>800</width>
+          <height>800</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise is sampled independently per pixel on each frame.
+               That pixel's noise value is added to each of its color
+               channels, which at that point lie in the range [0,1]. -->
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>teleop_cam</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera_link</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+    </gazebo>
+
+</robot>

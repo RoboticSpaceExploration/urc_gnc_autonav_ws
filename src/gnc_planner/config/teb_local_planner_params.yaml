@@ -1,0 +1,55 @@
+base_local_planner: "teb_local_planner/TebLocalPlannerROS"
+
+TebLocalPlannerROS:
+
+  # Robot configuration parameters
+  max_vel_x: 0.5
+  max_vel_theta: 0.2
+  acc_lim_x: 0.5
+  acc_lim_theta: 0.2
+
+  # Goal tolerance parameters
+  xy_goal_tolerance: 0.2
+  yaw_goal_tolerance: 0.1
+  free_goal_vel: false
+
+  # Optimization parameters
+  no_inner_iterations: 5
+  no_outer_iterations: 4
+  optimization_activate: true
+  optimization_verbose: false
+  penalty_epsilon: 0.1
+  weight_max_vel_x: 2
+  weight_max_vel_theta: 1
+  weight_acc_lim_x: 1
+  weight_acc_lim_theta: 1
+  weight_kinematics_nh: 1000
+  weight_kinematics_forward_drive: 1000
+  weight_kinematics_turning_radius: 1
+  weight_optimaltime: 1
+  weight_obstacle: 50
+  weight_dynamic_obstacle: 10 # Not used unless you set up dynamic obstacles in costmap
+
+
+  odom_topic: /odometry/filtered
+  map_frame: /map
+
+  # Obstacle configuration
+  #min_obstacle_dist: 0.2  # Minimum distance to obstacles
+  #include_costmap_obstacles: true  # Include obstacles from the costmap
+  #costmap_obstacles_behind_robot_dist: 1.0  # Distance to include obstacles behind the robot
+  #obstacle_poses_affected: 30  # Number of poses around an obstacle to be affected
+
+  footprint_model:
+    radius: 0.6
+    type: circular
+
+  # Map management
+  #global_plan_overwrite_orientation: true  # Overwrite orientation of global plan
+  #allow_init_with_backwards_motion: false  # Allow initializing backwards motion
+
+  # Miscellaneous parameters
+  visualization: true  # Publish visualization information
+  teb_autosize: true  # Automatically resize trajectory to temporal resolution
+  dt_ref: 0.3
+  dt_hysteresis: 0.1

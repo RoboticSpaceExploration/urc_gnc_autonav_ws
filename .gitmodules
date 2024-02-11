@@ -4,3 +4,6 @@
 [submodule "src/rtcm_msgs"]
 	path = src/rtcm_msgs
 	url = https://github.com/tilk/rtcm_msgs.git
+[submodule "src/realsense_gazebo_plugin"]
+	path = src/realsense_gazebo_plugin
+	url = https://github.com/issaiass/realsense_gazebo_plugin

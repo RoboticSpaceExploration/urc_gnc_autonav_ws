@@ -6,12 +6,11 @@
     <xacro:include filename="material.xacro" />
 
     <!-- Wheel Origin Values -->
-    <xacro:property name="LeftWheelXOrigin" value="-.32"/>
-    <xacro:property name="RightWheelXOrigin" value=".32"/>
+    <xacro:property name="LeftWheelXOrigin" value="-.37"/>
+    <xacro:property name="RightWheelXOrigin" value=".37"/>
 
-    <xacro:property name="BackWheelYOrigin" value="-.38"/>
-    <xacro:property name="MiddleWheelYOrigin" value="0"/>
-    <xacro:property name="FrontWheelYOrigin" value=".38"/>
+    <xacro:property name="BackWheelYOrigin" value="-.37"/>
+    <xacro:property name="FrontWheelYOrigin" value=".37"/>
 
     <xacro:property name="wheelMass" value="0.7"/>
 
@@ -22,20 +21,26 @@
 
     <!-- Left Side of the wheels -->
     <xacro:wheel name="wheel_Right_Front"  mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${FrontWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
-    <xacro:wheel name="wheel_Right_Middle" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${MiddleWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
     <xacro:wheel name="wheel_Right_Back" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${BackWheelYOrigin}" WheelYOrigin="${LeftWheelXOrigin}"/>
 
     <!-- Right Side of the wheels -->
     <xacro:wheel name="wheel_Left_Front" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${FrontWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
-    <xacro:wheel name="wheel_Left_Middle" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${MiddleWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
     <xacro:wheel name="wheel_Left_Back" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${BackWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
 
     <!-- Camera -->
-
+    <!--
     <xacro:include filename="$(find gnc_gazebo)/sensors/_d435i.xacro" />
     <xacro:include filename="$(find gnc_gazebo)/sensors/_T265.xacro"/>
+	    
+    -->
+    <xacro:include filename="$(find gnc_gazebo)/sensors/_ZED.xacro"/>
+  
     <xacro:arg name="use_nominal_extrinsics" default="True" />
+    <xacro:zed_camera name="ZEDMini" parent="base_link">
+        <origin xyz="0.0 0 0" rpy="0 0 0"/>
+    </xacro:zed_camera>
 
+<!--
     <xacro:realsense_d435 sensor_name="d435i" parent_link="base_link" rate="60.0">
         <origin xyz="0.20 0 0.1805" rpy="0 0 0"/>
     </xacro:realsense_d435>
@@ -43,13 +48,12 @@
     <xacro:realsense_T265 sensor_name="t265" parent_link="base_link" rate="60.0">
         <origin rpy="0 0 0" xyz="0 0 0.15"/>
     </xacro:realsense_T265>
-
+-->
     <!-- IMU GPS -->
-        <xacro:include filename="$(find gnc_gazebo)/sensors/_zedf9r.xacro"/>
-        <xacro:Sparkfun_zedf9r name="zed_Sensor" parentLink="base_link">
-            <origin rpy="0 0 0" xyz="0 0 0.15"/>
-        </xacro:Sparkfun_zedf9r>
-
+    <xacro:include filename="$(find gnc_gazebo)/sensors/_zedf9r.xacro"/>
+    <xacro:Sparkfun_zedf9r name="zed_Sensor" parentLink="base_link">
+       <origin rpy="0 0 0" xyz="0 0 0.15"/>
+    </xacro:Sparkfun_zedf9r>
     <!-- Gazebo code for protobot -->
     <gazebo>
         <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
@@ -61,10 +65,8 @@
             filename="libgazebo_ros_joint_state_publisher.so">
             <update_rate>20</update_rate>
             <joint_name>wheel_Left_Front_joint</joint_name>
-            <joint_name>wheel_Left_Middle_joint</joint_name>
             <joint_name>wheel_Left_Back_joint</joint_name>
             <joint_name>wheel_Right_Front_joint</joint_name>
-            <joint_name>wheel_Right_Middle_joint</joint_name>
             <joint_name>wheel_Right_Back_joint</joint_name>
         </plugin>
     </gazebo>
@@ -83,35 +85,60 @@
 
     <link name="teleop_camera_link"/>
 
-    <joint name="arm_joint" type="fixed">
+    <link name="magnetometer"/>
+    <gazebo>
+        <plugin name="GazeboRosMagnetic" filename="libhector_gazebo_ros_magnetic.so">
+	    <bodyName>magnetometer</bodyName>
+	    <topicName>/magnetometer/data</topicName>
+        </plugin>
+    </gazebo>
+
+    <joint name="mag_joint" type="fixed">
         <origin xyz="-0.113 -0.0174 0.235" rpy="0 0 0"/>
         <parent link="base_link"/>
-        <child link="arm_link"/>
+        <child link="magnetometer"/>
     </joint>
 
-    <link name="arm_link">
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <mesh filename="package://gnc_gazebo/mesh/arm.stl"/>
-            </geometry>
-        </visual>
-    </link>
+    <gazebo reference="teleop_camera_link">
+    <sensor type="camera" name="teleop_cam">
+      <update_rate>30.0</update_rate>
+      <camera name="teleop_cam">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>800</width>
+          <height>800</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise is sampled independently per pixel on each frame.
+               That pixel's noise value is added to each of its color
+               channels, which at that point lie in the range [0,1]. -->
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
 
-    <link name="base_to_shoulder_link"/>
-    <joint name="base_to_shoulder_joint" type="continuous">
-	<origin xyz="0 0 0" rpy="0 0 0"/>
-	<parent link="base_link"/>
-	<child link="base_to_shoulder_link"/>
-    </joint>
-<!--
-    <link name="shoulder_to_arm_link"/>
--->
-<!--
-    <link name="teleop_camera_link"/>
-    <link name="teleop_camera_link"/>
-    <link name="teleop_camera_link"/>
--->
-    
+
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>teleop_cam</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>camera_link</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+    </gazebo>
 
 </robot>

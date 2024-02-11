@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="zed_camera" params="name parent *origin">
+        <!-- Physical properties -->
+        <link name="${name}">
+            <xacro:insert_block name="origin"/>
+            <inertial>
+                <mass value="0.1"/> <!-- Adjust the mass as needed -->
+                <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+            </inertial>
+
+            <!-- Visual representation -->
+            <visual>
+                <xacro:insert_block name="origin"/>
+                <geometry>
+                    <box size="0.05 0.05 0.05"/> <!-- Adjust size as needed -->
+                </geometry>
+            </visual>
+
+            <!-- Collision representation -->
+            <collision>
+                <xacro:insert_block name="origin"/>
+                <geometry>
+                    <box size="0.05 0.05 0.05"/> <!-- Adjust size as needed -->
+                </geometry>
+            </collision>
+       </link>
+        <link name="${name}_imu_link"></link>
+	
+    	<joint name="${name}_${parent}_joint" type="fixed">
+		<parent link="${parent}"/>
+		<child link="${name}"/>
+		<origin xyz="0.6 0 0 " rpy="0 0 0 "/>
+	</joint>
+
+	<joint name="${name}_imu_joint" type="fixed">
+		<parent link="${parent}"/>
+		<child link="${name}_imu_link"/>
+	</joint>
+
+	<link name="${name}_optical_frame"/>
+
+	<joint name="${name}_optical_joint" type="fixed">
+		<parent link="${name}"/>
+		<child link="${name}_optical_frame"/>
+		<origin xyz="0 0 0" rpy="1.5708 0 0"/>
+	</joint>
+
+	<link name="${name}_optical_depth_frame"/>
+
+	<joint name="${name}_optical_depth_joint" type="fixed">
+		<parent link="${parent}"/>
+		<child link="${name}_optical_depth_frame"/>
+		<origin xyz="0 0 0" rpy="1.5708 3.142 1.5708"/>
+	</joint>
+
+        <!-- Stereo camera plugin for Gazebo -->
+        <gazebo reference="${name}">
+            <sensor type="camera" name="${name}_stereo_camera">
+                <update_rate>30.0</update_rate> <!-- Camera update rate -->
+                <camera name="left">
+                    <horizontal_fov>1.3962634</horizontal_fov> <!-- Field of view -->
+                    <image>
+                        <width>640</width>
+                        <height>480</height>
+                        <format>R8G8B8</format>
+                    </image>
+                    <clip>
+                        <near>0.02</near>
+                        <far>300</far>
+                    </clip>
+                </camera>
+                <camera name="right">
+                    <horizontal_fov>1.3962634</horizontal_fov> <!-- Field of view -->
+                    <image>
+                        <width>640</width>
+                        <height>480</height>
+                        <format>R8G8B8</format>
+                    </image>
+                    <clip>
+                        <near>0.02</near>
+                        <far>300</far>
+                    </clip>
+                </camera>
+                <plugin name="stereo_camera_controller" filename="libgazebo_ros_stereo_camera.so">
+                    <alwaysOn>true</alwaysOn>
+                    <updateRate>10</updateRate>
+                    <cameraName>${name}</cameraName>
+                    <leftImageTopicName>/camera/${name}/left/image_raw</leftImageTopicName>
+                    <rightImageTopicName>/camera/${name}/right/image_raw</rightImageTopicName>
+                    <leftCameraInfoTopicName>/camera/${name}/left/camera_info</leftCameraInfoTopicName>
+                    <rightCameraInfoTopicName>/camera/${name}/right/camera_info</rightCameraInfoTopicName>
+                    <frameName>${name}_optical_frame</frameName>
+                </plugin>
+            </sensor>
+        </gazebo>
+	        <!-- Depth Camera -->
+        <gazebo reference="${name}">
+            <sensor type="depth" name="${name}_depth_camera">
+                <update_rate>30.0</update_rate>
+                <camera>
+                    <horizontal_fov>1.3962634</horizontal_fov>
+                    <image>
+                        <width>640</width>
+                        <height>480</height>
+                        <format>R8G8B8</format>
+                    </image>
+                    <clip>
+                        <near>0.02</near>
+                        <far>300</far>
+                    </clip>
+                </camera>
+		<plugin name="camera_plugin" filename="libgazebo_ros_openni_kinect.so">
+         		 <baseline>0.2</baseline>
+          		 <alwaysOn>true</alwaysOn>
+          		 <!-- Keep this zero, update_rate in the parent <sensor> tag
+          		   will control the frame rate. -->
+          		 <updateRate>0.0</updateRate>
+			 <cameraName>${name}</cameraName>
+			 <imageTopicName>/${name}/color/image_raw</imageTopicName>
+			 <cameraInfoTopicName>/${name}/color/camera_info</cameraInfoTopicName>
+			 <depthImageTopicName>/${name}/depth/image_raw</depthImageTopicName>
+          		 <depthImageCameraInfoTopicName>/${name}/depth/camera_info</depthImageCameraInfoTopicName>
+			 <pointCloudTopicName>/${name}/depth/points</pointCloudTopicName>
+			 <frameName>${name}_optical_depth_frame</frameName>
+          		 <pointCloudCutoff>0.5</pointCloudCutoff>
+          		 <pointCloudCutoffMax>10.0</pointCloudCutoffMax>
+          		 <distortionK1>0</distortionK1>
+          		 <distortionK2>0</distortionK2>
+          		 <distortionK3>0</distortionK3>
+          		 <distortionT1>0</distortionT1>
+          		 <distortionT2>0</distortionT2>
+          		 <CxPrime>0</CxPrime>
+          		 <Cx>0</Cx>
+          		 <Cy>0</Cy>
+          		 <focalLength>0</focalLength>
+          		 <hackBaseline>0</hackBaseline>
+        	</plugin>
+
+            </sensor>
+        </gazebo>
+        <gazebo reference="${name}">
+            <sensor type="imu" name="${name}_imu_sensor">
+                <always_on>true</always_on>
+                <update_rate>50.0</update_rate> <!-- Update rate of the sensor -->
+                <plugin name="gyroscope_plugin" filename="libgazebo_ros_imu_sensor.so">
+		    <topicName>/${name}/imu/data</topicName>
+                    <bodyName>${name}</bodyName>
+		    <frameName>${name}_imu_link</frameName>
+		    <gaussianNoise>0.000001</gaussianNoise>
+		    <updateRateHZ>50.0</updateRateHZ>
+                </plugin>
+            </sensor>
+        </gazebo>
+
+	<gazebo> <!-- odometry -->
+            <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+                <alwaysOn>true</alwaysOn>
+		<updateRate>50</updateRate>
+                <bodyName>${name}</bodyName>
+                <topicName>${name}/odom/sample</topicName>
+                <gaussianNoise>0.001</gaussianNoise>
+                <frameName>world</frameName>
+                <xyzOffsets>0 0 0</xyzOffsets>
+                <rpyOffsets>0 0 0</rpyOffsets>
+            </plugin>
+        </gazebo>
+
+
+	</xacro:macro>
+</robot>
+

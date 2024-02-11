@@ -2,8 +2,8 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="wheel">
 
     <!-- This is values for the Wheels of the robot -->
-    <xacro:property name="wheelLength" value="0.1016" />
-    <xacro:property name="wheelRadius" value="0.09" />
+    <xacro:property name="wheelLength" value="0.02" />
+    <xacro:property name="wheelRadius" value="0.08" />
 
     <xacro:property name="originWheelX" value="0"/>
     <xacro:property name="originWheelY" value="0"/>
@@ -16,7 +16,7 @@
             <visual>
                 <origin xyz="${originWheelX} ${originWheelY} ${originWheelZ}" rpy="0 0 0"/>
                 <geometry>
-                    <mesh filename="package://gnc_gazebo/mesh/wheel.stl"/>
+                    <mesh filename="package://gnc_description/mesh/wheel.dae"/>
                 </geometry>
             </visual>
             <collision>

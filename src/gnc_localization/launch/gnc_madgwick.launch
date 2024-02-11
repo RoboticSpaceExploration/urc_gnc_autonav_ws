@@ -1,0 +1,17 @@
+<launch>
+    <!-- Node for imu_filter_madgwick -->
+    <node name="imu_filter_madgwick" pkg="imu_filter_madgwick" type="imu_filter_node" output="screen">
+        <!-- Set the parameters for the IMU filter -->
+        <param name="use_mag" value="true"/>
+	<param name="use_magnetic_field_msg" value="false"/>
+
+        <param name="world_frame" value="enu"/> <!-- or "ned" or "nwu" -->
+
+        <!-- Remap the IMU and magnetometer topics -->
+        <remap from="imu/data_raw" to="/imu/data_raw"/>
+        <remap from="imu/mag" to="/magnetometer/data"/>
+
+        <!-- Additional parameters can be set here -->
+    </node>
+</launch>
+
