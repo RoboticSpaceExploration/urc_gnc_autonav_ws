@@ -1,68 +1,22 @@
-/* MIT License
-Copyright (c) [2022] [VIP Team RoSE]
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE. */
-
+#include <gnc_control/roboclaw.h>
 #include <gnc_control/robot_hardware_interface.h>
+#include <vector>
+#include <string>
+#include <math.h>
+#include <cstdlib>
 
-int main(int argc, char **argv)
+RobotHardwareInterface::RobotHardwareInterface(ros::NodeHandle* nh, RobotHwinSettings* robotSettings)
 {
-    ros::init(argc, argv, "hardware_interface");
-    ros::NodeHandle nh;
-
-    ros::AsyncSpinner spinner(3);
-    spinner.start();
-
-    ROS_INFO_STREAM("Loading protobot_control_hw_node");
-    settings esMain;
-    RobotHardwareInterface robot(&nh, &esMain);
-    controller_manager::ControllerManager cm(&robot);
-    roboclaw rb(&esMain);
-    ros::Rate rate(esMain.loopFrequency);
-
-    ROS_INFO("Initializing roboclaw motor encoders");
-    rb.SetupEncoders();
-
-    while (ros::ok()) {
-        robot.readFromWheels(&rb, &esMain);
-        cm.update(robot.get_time(), robot.get_period());
-        robot.writeToWheels(&rb, &esMain);
-        rate.sleep();
-    }
-
-    ROS_INFO("Shutting down roboclaw motor encoders");
-    rb.CloseEncoders();
-
-    return 0;
-}
-
-RobotHardwareInterface::RobotHardwareInterface(ros::NodeHandle* nh, settings* esPtr)
-{
-    es = esPtr;
-    ROS_INFO("Setting Yaml parameters for serial port");
-    setYamlParameters(nh);
-    ROS_INFO("Registering ros_control handlers");
+    this->robotSettings = robotSettings;
+	
+    ROS_INFO("Registering ros_control joint interfaces and handlers");
     registerStateHandlers();
     registerJointVelocityHandlers();
 
-    clock_gettime(CLOCK_MONOTONIC, &last_time);
+    clock_gettime(CLOCK_MONOTONIC, &lastTime);
 
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 11; i++)
         cmd[i] = vel[i] = pos[i] = eff[i] = 0;
 }
 
@@ -70,95 +24,294 @@ RobotHardwareInterface::~RobotHardwareInterface() { }
 
 void RobotHardwareInterface::registerStateHandlers()
 {
-    hardware_interface::JointStateHandle stateHandleA(
-        es->rightJoints[0], &pos[0], &vel[0], &eff[0]);
-    jntStateInterface.registerHandle(stateHandleA);
+    ROS_INFO("Registering Joint State Interface");
 
-    hardware_interface::JointStateHandle stateHandleB(
-        es->rightJoints[1], &pos[1], &vel[1], &eff[1]);
-    jntStateInterface.registerHandle(stateHandleB);
+    // wheel state handlers
+    hardware_interface::JointStateHandle wheelRightFront( 
+        robotSettings->rightWheelNames[0], &pos[0], &vel[0], &eff[0]);
+    jointStateInterface.registerHandle(wheelRightFront);
 
-    hardware_interface::JointStateHandle stateHandleC(
-        es->rightJoints[2], &pos[2], &vel[2], &eff[2]);
-    jntStateInterface.registerHandle(stateHandleC);
+    hardware_interface::JointStateHandle wheelRightMiddle(
+        robotSettings->rightWheelNames[1], &pos[1], &vel[1], &eff[1]);
+    jointStateInterface.registerHandle(wheelRightMiddle);
 
-    hardware_interface::JointStateHandle stateHandleD(
-        es->leftJoints[0], &pos[3], &vel[3], &eff[3]);
-    jntStateInterface.registerHandle(stateHandleD);
+    hardware_interface::JointStateHandle wheelRightBack(
+        robotSettings->rightWheelNames[2], &pos[2], &vel[2], &eff[2]);
+    jointStateInterface.registerHandle(wheelRightBack);
 
-    hardware_interface::JointStateHandle stateHandleE(
-        es->leftJoints[1], &pos[4], &vel[4], &eff[4]);
-    jntStateInterface.registerHandle(stateHandleE);
+    hardware_interface::JointStateHandle wheelLeftFront(
+        robotSettings->leftWheelNames[0], &pos[3], &vel[3], &eff[3]);
+    jointStateInterface.registerHandle(wheelLeftFront);
 
-    hardware_interface::JointStateHandle stateHandleF(
-        es->leftJoints[2], &pos[5], &vel[5], &eff[5]);
-    jntStateInterface.registerHandle(stateHandleF);
+    hardware_interface::JointStateHandle wheelLeftMiddle(
+        robotSettings->leftWheelNames[1], &pos[4], &vel[4], &eff[4]);
+    jointStateInterface.registerHandle(wheelLeftMiddle);
 
-    registerInterface(&jntStateInterface);
+    hardware_interface::JointStateHandle wheelLeftBack(
+        robotSettings->leftWheelNames[2], &pos[5], &vel[5], &eff[5]);
+    jointStateInterface.registerHandle(wheelLeftBack);
+
+    // Arm state handlers
+    hardware_interface::JointStateHandle base_to_shoulder_joint(
+        robotSettings->armJointNames[0], &pos[6], &vel[6], &eff[6]);
+    jointStateInterface.registerHandle(base_to_shoulder_joint);
+
+    hardware_interface::JointStateHandle shoulder_to_arm_joint(
+        robotSettings->armJointNames[1], &pos[7], &vel[7], &eff[7]);
+    jointStateInterface.registerHandle(shoulder_to_arm_joint);
+
+    hardware_interface::JointStateHandle arm_to_yzwrist_joint(
+        robotSettings->armJointNames[2], &pos[8], &vel[8], &eff[8]);
+    jointStateInterface.registerHandle(arm_to_yzwrist_joint);
+
+    hardware_interface::JointStateHandle yzwrist_to_xywrist_joint(
+        robotSettings->armJointNames[3], &pos[9], &vel[9], &eff[9]);
+    jointStateInterface.registerHandle(yzwrist_to_xywrist_joint);
+
+    hardware_interface::JointStateHandle xywrist_to_xzwrist_joint(
+        robotSettings->armJointNames[4], &pos[10], &vel[10], &eff[10]);
+    jointStateInterface.registerHandle(xywrist_to_xzwrist_joint);
+
+    hardware_interface::JointStateHandle xzwrist_to_grip_joint(
+        robotSettings->armJointNames[5], &pos[11], &vel[11], &eff[11]);
+    jointStateInterface.registerHandle(xzwrist_to_grip_joint);
+
+    registerInterface(&jointStateInterface);
 }
+
 void RobotHardwareInterface::registerJointVelocityHandlers()
 {
-        hardware_interface::JointHandle vel_handle_a(
-        jntStateInterface.getHandle(es->rightJoints[0]), &cmd[0]);
-    jnt_vel_interface.registerHandle(vel_handle_a);
+    ROS_INFO("Registering Velocity Joint Interface");
 
-    hardware_interface::JointHandle vel_handle_b(
-        jntStateInterface.getHandle(es->rightJoints[1]), &cmd[1]);
-    jnt_vel_interface.registerHandle(vel_handle_b);
+    hardware_interface::JointHandle wheelRightFront(
+        jointStateInterface.getHandle(robotSettings->rightWheelNames[0]), &cmd[0]);
+    velocityJointInterface.registerHandle(wheelRightFront);
 
-    hardware_interface::JointHandle vel_handle_c(
-        jntStateInterface.getHandle(es->rightJoints[2]), &cmd[2]);
-    jnt_vel_interface.registerHandle(vel_handle_c);
+    hardware_interface::JointHandle wheelRightMiddle(
+        jointStateInterface.getHandle(robotSettings->rightWheelNames[1]), &cmd[1]);
+    velocityJointInterface.registerHandle(wheelRightMiddle);
 
-    hardware_interface::JointHandle vel_handle_d(
-        jntStateInterface.getHandle(es->leftJoints[0]), &cmd[3]);
-    jnt_vel_interface.registerHandle(vel_handle_d);
+    hardware_interface::JointHandle wheelRightBack(
+        jointStateInterface.getHandle(robotSettings->rightWheelNames[2]), &cmd[2]);
+    velocityJointInterface.registerHandle(wheelRightBack);
 
-    hardware_interface::JointHandle vel_handle_e(
-        jntStateInterface.getHandle(es->leftJoints[1]), &cmd[4]);
-    jnt_vel_interface.registerHandle(vel_handle_e);
+    hardware_interface::JointHandle wheelLeftFront(
+        jointStateInterface.getHandle(robotSettings->leftWheelNames[0]), &cmd[3]);
+    velocityJointInterface.registerHandle(wheelLeftFront);
 
-    hardware_interface::JointHandle vel_handle_f(
-        jntStateInterface.getHandle(es->leftJoints[2]), &cmd[5]);
-    jnt_vel_interface.registerHandle(vel_handle_f);
+    hardware_interface::JointHandle wheelLeftMiddle(
+        jointStateInterface.getHandle(robotSettings->leftWheelNames[1]), &cmd[4]);
+    velocityJointInterface.registerHandle(wheelLeftMiddle);
 
-    registerInterface(&jnt_vel_interface);
+    hardware_interface::JointHandle wheelLeftBack(
+        jointStateInterface.getHandle(robotSettings->leftWheelNames[2]), &cmd[5]);
+    velocityJointInterface.registerHandle(wheelLeftBack);
+
+    // arm joint velocity command handlers
+    hardware_interface::JointHandle base_to_shoulder_joint(
+        jointStateInterface.getHandle(robotSettings->armJointNames[0]), &cmd[6]);
+    velocityJointInterface.registerHandle(base_to_shoulder_joint);
+
+    hardware_interface::JointHandle shoulder_to_arm_joint(
+        jointStateInterface.getHandle(robotSettings->armJointNames[1]), &cmd[7]);
+    velocityJointInterface.registerHandle(shoulder_to_arm_joint);
+
+    hardware_interface::JointHandle arm_to_yzwrist_joint(
+        jointStateInterface.getHandle(robotSettings->armJointNames[2]), &cmd[8]);
+    velocityJointInterface.registerHandle(arm_to_yzwrist_joint);
+
+    hardware_interface::JointHandle yzwrist_to_xywrist_joint(
+        jointStateInterface.getHandle(robotSettings->armJointNames[3]), &cmd[9]);
+    velocityJointInterface.registerHandle(yzwrist_to_xywrist_joint);
+
+    hardware_interface::JointHandle xywrist_to_xzwrist_joint(
+        jointStateInterface.getHandle(robotSettings->armJointNames[4]), &cmd[10]);
+    velocityJointInterface.registerHandle(xywrist_to_xzwrist_joint);
+
+    hardware_interface::JointHandle xzwrist_to_grip_joint(
+        jointStateInterface.getHandle(robotSettings->armJointNames[5]), &cmd[11]);
+    velocityJointInterface.registerHandle(xzwrist_to_grip_joint);
+
+    registerInterface(&velocityJointInterface);
 }
 
-void RobotHardwareInterface::writeToWheels(roboclaw *rb, settings *es)
+void RobotHardwareInterface::write(Roboclaw* rb)
 {
-    if (es->debug_mode) {
-        ROS_INFO_STREAM("READING JOINT STATES FROM ROS");
-        printDebugInfo("SENDING CMD_VEL TO", cmd);
+    sendCommandToWheels(rb);
+    // sendCommandToArm(rb);
+}
+
+void RobotHardwareInterface::sendCommandToWheels(Roboclaw* rb)
+{
+    // convert cmd_vel to a usable command between 0-127
+    scaleWheelCommands();
+
+    // prevent zero velocity spamming from ros_control
+    if (zeroCmdVelCount <= robotSettings->maxRetries) {
+        // if positive, move motors forward. if negative, move backwards
+        if (cmd[0] >= 0)  // right_front
+            rb->ForwardM1(robotSettings->rightWheelRoboclawAddresses[0], cmdToSend[0]);
+        else
+            rb->BackwardM1(robotSettings->rightWheelRoboclawAddresses[0], cmdToSend[0]);
+
+        if (cmd[1] >= 0)  // right_middle
+            rb->ForwardM1(robotSettings->rightWheelRoboclawAddresses[1], cmdToSend[1]);
+        else
+            rb->BackwardM1(robotSettings->rightWheelRoboclawAddresses[1], cmdToSend[1]);
+
+        if (cmd[2] >= 0)  // right_back
+            rb->ForwardM1(robotSettings->rightWheelRoboclawAddresses[2], cmdToSend[2]);
+        else
+            rb->BackwardM1(robotSettings->rightWheelRoboclawAddresses[2], cmdToSend[2]);
+
+        if (cmd[3] >= 0)  // left_front
+            rb->ForwardM1(robotSettings->leftWheelRoboclawAddresses[0], cmdToSend[3]);
+        else
+            rb->BackwardM1(robotSettings->leftWheelRoboclawAddresses[0], cmdToSend[3]);
+
+        if (cmd[4] >= 0)  // left_middle
+            rb->ForwardM1(robotSettings->leftWheelRoboclawAddresses[1], cmdToSend[4]);
+        else
+            rb->BackwardM1(robotSettings->leftWheelRoboclawAddresses[1], cmdToSend[4]);
+
+        if (cmd[5] >= 0)  // left_back
+            rb->ForwardM1(robotSettings->leftWheelRoboclawAddresses[2], cmdToSend[5]);
+        else
+            rb->BackwardM1(robotSettings->leftWheelRoboclawAddresses[2], cmdToSend[5]);
     }
 
-    rb->SendCommandToWheels(cmd);
+    // if any of the cmd_vel are zero, increment counter
+
+    cmd[0] = cmd[1] = cmd[2] = cmd[3] = cmd[4] = cmd[5] = 0;
 }
 
-void RobotHardwareInterface::readFromWheels(roboclaw *rb, settings *es)
+void RobotHardwareInterface::sendCommandToArm(Roboclaw* roboclaw)
 {
-    if (es->debug_mode) {
-        rb->GetVelocityFromWheels(vel);
+    uint8_t cmd_send[12];
 
-        ROS_INFO_STREAM("READING JOINT STATES FROM MOTOR ENCODERS");
-        printDebugInfo("VEL FROM", vel);
+    for (int i = 6; i < 12; i++)
+    {
+        cmd_send[i] = fabs(cmd[i]); // need to send positive values to roboclaws
+    }
+
+    scaleArmCommands(cmd_send);
+    
+    // Linear actuators (should be roboclaw address 131 or 0x83)
+    if (cmd[6] > 0)
+    {
+        roboclaw->ForwardM1(0x83, cmd_send[6]);
+        roboclaw->ForwardM2(0x83, cmd_send[6]);
+    }
+    else if (cmd[6] < 0)
+    {
+        roboclaw->BackwardM1(0x83, cmd_send[6]);
+        roboclaw->BackwardM2(0x83, cmd_send[6]);
+    }
+    else
+    {
+        roboclaw->ForwardM1(0x83, 0);
+        roboclaw->ForwardM2(0x83, 0);
+    }
+
+    // other motors
+    if (cmd[7] >= 0)  // arm base (should be roboclaw address 132 or 0x84)
+    {
+        roboclaw->ForwardM1(0x84, cmd_send[7]);
+        roboclaw->ForwardM2(0x84, cmd_send[7]);
+    }
+    else
+    {
+        roboclaw->BackwardM1(0x84, cmd_send[7]);
+        roboclaw->BackwardM2(0x84, cmd_send[7]);
+    }
+
+    if (cmd[8] >= 0) // forearm (should be roboclaw address 134 or 0x86)
+        roboclaw->ForwardM1(0x86, cmd_send[8]);
+    else
+        roboclaw->BackwardM1(0x86, cmd_send[8]);
+
+    if (cmd[9] >= 0)  // end effector and wrist (should be roboclaw address 133 or 0x85)
+        roboclaw->ForwardM2(0x86, cmd_send[9]);
+    else
+        roboclaw->BackwardM2(0x86, cmd_send[9]);
+
+    if (cmd[10] >= 0)  // end effector and wrist
+        roboclaw->ForwardM1(0x85, cmd_send[10]);
+    else
+        roboclaw->BackwardM1(0x85, cmd_send[10]);
+
+
+    if (cmd[11] >= 0)  // left_middle not used rn
+         roboclaw->ForwardM2(0x85,  cmd_send[11]);
+    else
+         roboclaw->BackwardM2(0x85, cmd_send[11]);
+    
+    for (int i = 6; i < 12; i++)
+    {
+        cmd[i] = 0;
     }
 }
 
-ros::Time RobotHardwareInterface::get_time()
+void RobotHardwareInterface::read(Roboclaw* rb)
+{
+    // not implemented
+    // int32_t position = rb->ReadEncoderPositionM1(0x80);
+    // ROS_INFO_STREAM("Reading from roboclaw: " << position);
+}
+
+void RobotHardwareInterface::scaleWheelCommands()
+{
+    // TODO scaled the commands from 0-126 to send to roboclaw
+    for (int i = 0; i < 6; i++)
+    {
+        double res = (fabs(cmd[i]) / 16.667) * robotSettings->maxEffortValue;
+
+        if (res >= robotSettings->maxEffortValue)
+            cmdToSend[i] = robotSettings->maxEffortValue;
+        else
+            cmdToSend[i] = (uint8_t) res;
+    }
+}
+
+void RobotHardwareInterface::scaleArmCommands(uint8_t *cmd_send)
+{
+    int maxVal = 126;
+    for (int i = 6; i < 12; i++)
+    {
+        cmd_send[i] *= maxVal;
+        if (cmd_send[i] >= maxVal)
+            cmd_send[i] = maxVal;
+	else if (cmd_send[i] < 0)
+	    cmd_send[i] = 0;
+    }
+}
+
+void RobotHardwareInterface::getVelocityFromWheels()
+{
+    // TODO use convertPulsesToRadians for distance conversion
+    // velocity = distance / time
+}
+
+double RobotHardwareInterface::convertPulsesToRadians(double cmd)
+{
+    // TODO conversion rate from motor encoder value to distance (circumference of wheel)
+    return 0;
+}
+
+ros::Time RobotHardwareInterface::getTime()
 {
     return ros::Time::now();
 }
 
-ros::Duration RobotHardwareInterface::get_period()
+ros::Duration RobotHardwareInterface::getPeriod()
 {
-    clock_gettime(CLOCK_MONOTONIC, &current_time);
-    elapsed_time =
-            ros::Duration(current_time.tv_sec - last_time.tv_sec
-            + (current_time.tv_nsec - last_time.tv_nsec) / BILLION);
-    last_time = current_time;
+    clock_gettime(CLOCK_MONOTONIC, &currentTime);
+    elapsedTime =
+            ros::Duration(currentTime.tv_sec - lastTime.tv_sec
+            + (currentTime.tv_nsec - lastTime.tv_nsec) / BILLION);
+    lastTime = currentTime;
 
-    return elapsed_time;
+    return elapsedTime;
 }
 
 void RobotHardwareInterface::printDebugInfo(std::string name, double* data) {
@@ -168,57 +321,4 @@ void RobotHardwareInterface::printDebugInfo(std::string name, double* data) {
     ROS_INFO_STREAM(name << " LEFT_FRONT_WHEEL_JOINT "   << data[3]);
     ROS_INFO_STREAM(name << " LEFT_MIDDLE_WHEEL_JOINT "  << data[4]);
     ROS_INFO_STREAM(name << " LEFT_BACK_WHEEL_JOINT "    << data[5]);
-}
-
-void RobotHardwareInterface::setYamlParameters(ros::NodeHandle* nh) {
-    int exitFlag = false;
-    for (int i = 0; i < 2; i++) {
-        es->rightAddr[i] = 0;
-        es->leftAddr[i] = 0;
-    }
-
-    nh->getParam("/wheel_encoders/debug_mode", es->debug_mode);
-    nh->getParam("/wheel_encoders/serial_port", es->serialPortAddr);
-    nh->getParam("/wheel_encoders/send_command_retries", es->retries);
-    nh->getParam("/wheel_encoders/encoder_timeout_ms", es->timeout_ms);
-    nh->getParam("/wheel_encoders/loop_frequency", es->loopFrequency);
-    nh->getParam("/wheel_encoders/baud_rate", es->baud_rate);
-    nh->getParam("/wheel_encoders/right_wheel", right_joint_list);
-    nh->getParam("/wheel_encoders/left_wheel", left_joint_list);
-    nh->getParam("/wheel_encoders/right_addr", right_joint_addr_list);
-    nh->getParam("/wheel_encoders/left_addr", left_joint_addr_list);
-
-    for (int i = 0; i <= 2; i++) {
-        es->rightJoints[i] = static_cast<std::string> (right_joint_list[i]);
-        es->leftJoints[i] = static_cast<std::string> (left_joint_list[i]);
-        es->rightAddr[i] = static_cast<int> (right_joint_addr_list[i]);
-        es->leftAddr[i] = static_cast<int> (left_joint_addr_list[i]);
-
-        if (es->rightJoints[i] == "") {
-            ROS_ERROR("Right joint [%d] : Incorrect number of "
-                      "joints specified in YAML file", i);
-            exitFlag = true;
-        }
-
-        if (es->rightAddr[i] < 128 || es->rightAddr[i] > 135) {
-            ROS_ERROR("Right address [%d] : Incorrect address "
-                      "specified in YAML file", i);
-            exitFlag = true;
-        }
-
-        if (es->leftJoints[i] == "") {
-            ROS_ERROR("Left Joint [%d] : Incorrect number of "
-                      "joints specified in YAML file", i);
-            exitFlag = true;
-        }
-
-        if (es->leftAddr[i] < 128 || es->leftAddr[i] > 135) {
-            ROS_ERROR("Left address [%d] : Incorrect address "
-                      "specified in YAML file", i);
-            exitFlag = true;
-        }
-    }
-
-    if (exitFlag)
-        exit(EXIT_FAILURE);
 }

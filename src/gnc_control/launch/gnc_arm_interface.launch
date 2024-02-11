@@ -1,0 +1,24 @@
+<launch>
+	<rosparam command="load" file="$(find gnc_control)/config/arm_config.yaml"/>
+	<!-- <rosparam command="load" file="$(find gnc_control)/config/l298n_settings.yaml"/> -->
+	<!-- Launch hardware interface then add the controller manager and controllers-->
+	<node name="pigpioInit" pkg="test_control" type="pigpioInit.sh"/>
+	<node name="arm_hardware_interface_1" 
+		pkg="gnc_control" 
+		type="arm_hardware_interface" 
+		output="screen" />
+
+	<node name="controller_manager_node" 
+		pkg="controller_manager" 
+		type="spawner"
+		output="screen"
+		args="
+			/arm/joint_state_controller 
+			/arm/joint1_position_controller 
+			/arm/joint2_position_controller 
+			/arm/joint3_position_controller 
+			/arm/joint4_position_controller 
+			/arm/joint5_position_controller 
+			/arm/joint6_position_controller 
+			/arm/joint7_position_controller"/>
+</launch>

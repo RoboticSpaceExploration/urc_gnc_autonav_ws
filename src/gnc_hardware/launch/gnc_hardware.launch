@@ -1,5 +1,6 @@
 <launch>
 	<remap from="/ublox_gps/fix" to="/gps/fix"/>
 	
+	<include file="$(find gnc_control)/launch/gnc_control_hardware.launch"/>
 	<include file="$(find gnc_hardware)/launch/zedf9r.launch"/>
 </launch>
