@@ -1,0 +1,14 @@
+drive_hwin_settings:
+  left_wheel_names: ['wheel_left_front', 'wheel_left_back']
+  right_wheel_names: ['wheel_right_front', 'wheel_right_back']
+  left_wheel_axis: [0, 1] # each side uses one motor controller for two motors
+  right_wheel_axis: [0, 1] 
+  ros_loop_rate: 20
+  debug_mode: False
+  encoder_ticks_per_revolution: 1280
+
+drive_node:
+  od_sn: '2052325E4D31' # serial number of left,right motor controller
+  # od_sn: '206E34674633,2052325E4D31' add and remove when working on different controller
+  # od_cfg: '/home/roselab/Desktop/urc_gnc_autonav_ws/src/gnc_control/config/odrive_7pole.json,/home/roselab/Desktop/urc_gnc_autonav_ws/src/gnc_control/config/odrive_7pole.json' # set json file with configurations
+  od_cfg: '/home/roselab/Desktop/urc_gnc_autonav_ws/src/gnc_control/config/odrive_7pole.json' # set json file with configurations

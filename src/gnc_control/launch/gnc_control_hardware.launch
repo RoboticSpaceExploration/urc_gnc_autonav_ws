@@ -1,17 +1,33 @@
 <launch>
 
 	<rosparam command="load" file="$(find gnc_control)/config/control.yaml"/>
-	<rosparam command="load" file="$(find gnc_control)/config/encoder_settings.yaml"/>
+	<rosparam command="load" file="$(find gnc_control)/config/robot_hwin_settings.yaml"/>
+	<rosparam command="load" file="$(find gnc_control)/config/arm_config.yaml"/>
 	<!-- Launch hardware interface then add the controller manager and controllers-->
-	<node name="robot_hardware_interface" 
+	<node name="control" 
 		pkg="gnc_control" 
-		type="robot_hardware_interface" 
+		type="control" 
 		output="screen"/>
-	<node name="controller_manager_node" 
+<!--
+	<node name="controller_manager_wheel" 
 		pkg="controller_manager"
 		type="spawner"  
 		output="screen"  
-		args="/gnc_robot/gnc_robot_velocity_controller 
-			/gnc_robot/gnc_robot_joint_publisher" />
+		args="/gnc_robot/gnc_wheel_velocity_controller 
+			/gnc_robot/gnc_wheel_joint_publisher" />
+-->
+	<node name="controller_manager_arm" 
+		pkg="controller_manager"
+		type="spawner"  
+		output="screen"  
+		args="/gnc_robot/gnc_wheel_velocity_controller 
+			/gnc_robot/gnc_wheel_joint_publisher
+			/arm/joint_state_controller
+			/arm/joint1_position_controller
+			/arm/joint2_position_controller
+			/arm/joint3_position_controller
+			/arm/joint4_position_controller
+			/arm/joint5_position_controller
+			/arm/joint6_position_controller" />
 	
 </launch>
