@@ -46,10 +46,10 @@ void DriveHwin::read()
         odrive_json = od->json.at(i);
 
         // update watchdog
-        execOdriveFunc(endpoint, odrive_json, "axis0.watchdog_feed");
-        execOdriveFunc(endpoint, odrive_json, "axis1.watchdog_feed");
+        //execOdriveFunc(endpoint, odrive_json, "axis0.watchdog_feed");
+        //execOdriveFunc(endpoint, odrive_json, "axis1.watchdog_feed");
         // Publish status message
-        this->publishOdriveData(endpoint, odrive_json, od->odrive_pub.at(i));
+        //this->publishOdriveData(endpoint, odrive_json, od->odrive_pub.at(i));
     }
 }
 
@@ -71,8 +71,9 @@ void DriveHwin::write()
 
         uint32_t odrive_error0;
         uint32_t odrive_error1;
-        readOdriveData(endpoint, odrive_json, string("axis0.error"), odrive_error0);
-        readOdriveData(endpoint, odrive_json, string("axis1.error"), odrive_error1);
+	/*
+        //readOdriveData(endpoint, odrive_json, string("axis0.error"), odrive_error0);
+        //readOdriveData(endpoint, odrive_json, string("axis1.error"), odrive_error1);
         if (odrive_error0 != 0)
         {
             execOdriveFunc(endpoint, odrive_json, "axis0.clear_errors");
@@ -81,16 +82,17 @@ void DriveHwin::write()
         {
             execOdriveFunc(endpoint, odrive_json, "axis1.clear_errors");
         }
+	*/
 
         // update watchdog
-        execOdriveFunc(endpoint, odrive_json, "axis0.watchdog_feed");
-        execOdriveFunc(endpoint, odrive_json, "axis1.watchdog_feed");
+        //execOdriveFunc(endpoint, odrive_json, "axis0.watchdog_feed");
+        //execOdriveFunc(endpoint, odrive_json, "axis1.watchdog_feed");
 
         // variables for sending to motor controller
         // ros control multiplies cmd_vel by 5, 31.4 is     
         float axis0_fval = (float)((cmd[2 * i] * 31.4) / 5); 
         float axis1_fval = (float)((cmd[1 + (2 * i)] * 31.4) / 5.0);
-        ROS_INFO_STREAM("AXIS 0 CMD: " << axis0_fval);
+        //ROS_INFO_STREAM("AXIS 0 CMD: " << axis0_fval);
 
         // build command to send
         std::string cmdAxis0 = "axis0.controller.input_vel";
@@ -229,7 +231,7 @@ int DriveHwin::initializeOdrive()
             "axis0.clear_errors");
         execOdriveFunc(od->endpoint.at(i), od->json.at(i), 
             "axis1.clear_errors");
-        updateTargetConfig(od->endpoint.at(i), od->json.at(i), od->target_cfg.at(i));
+        //updateTargetConfig(od->endpoint.at(i), od->json.at(i), od->target_cfg.at(i));
 
         // enter closed loop drive after configuration
         ROS_INFO("Entering closed loop control with motors");

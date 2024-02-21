@@ -1,0 +1,8 @@
+<launch>
+	<node name="aruco_detect" pkg="aruco_detect" type="aruco_detect" output="screen">
+		<param name="marker_size" value="0.02"/>
+		<param name="marker_dictionary" value="DICT_4x4_50"/>
+		<remap from="/camera" to="/zedm/zed_node/left/image_rect_color"/>
+		<remap from="camera_info" to="/zedm/zed_node/left/camera_info"/>
+	</node>
+</launch>

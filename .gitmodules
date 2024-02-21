@@ -7,3 +7,21 @@
 [submodule "src/realsense_gazebo_plugin"]
 	path = src/realsense_gazebo_plugin
 	url = https://github.com/issaiass/realsense_gazebo_plugin
+[submodule "src/elevation_mapping"]
+	path = src/elevation_mapping
+	url = https://www.github.com/ANYbotics/elevation_mapping
+[submodule "src/kindr"]
+	path = src/kindr
+	url = https://www.github.com/ANYbotics/kindr
+[submodule "src/kindr_ros"]
+	path = src/kindr_ros
+	url = https://www.github.com/ANYbotics/kindr_ros
+[submodule "src/message_logger"]
+	path = src/message_logger
+	url = https://www.github.com/ANYbotics/message_logger
+[submodule "src/zed-ros-wrapper"]
+	path = src/zed-ros-wrapper
+	url = https://www.github.com/stereolabs/zed-ros-wrapper
+[submodule "src/ar_track_alvar"]
+	path = src/ar_track_alvar
+	url = https://github.com/ros-perception/ar_track_alvar

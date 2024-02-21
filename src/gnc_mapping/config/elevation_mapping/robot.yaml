@@ -1,7 +1,7 @@
 input_sources:
         pointcloud_sensor:
                 type: pointcloud
-                topic: /ZEDMini/depth/points/downsample
+                topic: /zedm/zed_node/point_cloud/cloud_registered/downsample
                 queue_size: 1
                 publish_on_update: true
                 sensor_processor:

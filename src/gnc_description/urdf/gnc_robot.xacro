@@ -34,9 +34,9 @@
 	    
     -->
     <xacro:include filename="$(find gnc_gazebo)/sensors/_ZED.xacro"/>
-  
+
     <xacro:arg name="use_nominal_extrinsics" default="True" />
-    <xacro:zed_camera name="ZEDMini" parent="base_link">
+    <xacro:zed_camera name="zedm" parent="base_link">
         <origin xyz="0.0 0 0" rpy="0 0 0"/>
     </xacro:zed_camera>
 
@@ -51,7 +51,7 @@
 -->
     <!-- IMU GPS -->
     <xacro:include filename="$(find gnc_gazebo)/sensors/_zedf9r.xacro"/>
-    <xacro:Sparkfun_zedf9r name="zed_Sensor" parentLink="base_link">
+    <xacro:Sparkfun_zedf9r name="gps" parentLink="base_link">
        <origin rpy="0 0 0" xyz="0 0 0.15"/>
     </xacro:Sparkfun_zedf9r>
     <!-- Gazebo code for protobot -->

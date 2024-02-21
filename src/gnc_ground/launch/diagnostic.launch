@@ -1,0 +1,8 @@
+<launch>
+    <!-- Node for Tegrastats Publisher -->
+    <node name="tegrastats_publisher"
+          pkg="tegra_ros_diagnostics"
+          type="tegrastats_node.py"
+          output="screen" />
+</launch>
+

@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
     <xacro:macro name="zed_camera" params="name parent *origin">
         <!-- Physical properties -->
-        <link name="${name}">
+        <link name="${name}_base_link">
             <xacro:insert_block name="origin"/>
             <inertial>
                 <mass value="0.1"/> <!-- Adjust the mass as needed -->
@@ -24,15 +24,17 @@
                     <box size="0.05 0.05 0.05"/> <!-- Adjust size as needed -->
                 </geometry>
             </collision>
-       </link>
+	</link>
+	<!--
         <link name="${name}_imu_link"></link>
-	
+ -->
+
     	<joint name="${name}_${parent}_joint" type="fixed">
 		<parent link="${parent}"/>
-		<child link="${name}"/>
-		<origin xyz="0.6 0 0 " rpy="0 0 0 "/>
+		<child link="${name}_base_link"/>
+		<origin xyz="0.8 0 0 " rpy="0 0.785 0 "/>
 	</joint>
-
+	<!--
 	<joint name="${name}_imu_joint" type="fixed">
 		<parent link="${parent}"/>
 		<child link="${name}_imu_link"/>
@@ -53,7 +55,9 @@
 		<child link="${name}_optical_depth_frame"/>
 		<origin xyz="0 0 0" rpy="1.5708 3.142 1.5708"/>
 	</joint>
+	-->
 
+	
         <!-- Stereo camera plugin for Gazebo -->
         <gazebo reference="${name}">
             <sensor type="camera" name="${name}_stereo_camera">

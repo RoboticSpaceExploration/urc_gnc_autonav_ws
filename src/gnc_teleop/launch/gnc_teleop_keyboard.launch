@@ -1,13 +1,7 @@
 <launch>
 
-	<!--
 	<node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop" output="screen" >
-		<remap from="/cmd_vel" to="/gnc_robot/gnc_robot_velocity_controller/cmd_vel"/>
-	</node>
-	-->
-	<node pkg="teleop_twist_joy" type="teleop_node" name="teleop_joy">
 		<remap from="/cmd_vel" to="/gnc_robot/gnc_drive_velocity_controller/cmd_vel"/>
-		
 	</node>
 
 </launch>

@@ -1,4 +1,4 @@
 <launch>
 	<include file="$(find gnc_hardware)/launch/gnc_hardware.launch"/>
-
+	<include file="$(find gnc_bringup)/launch/gnc_core.launch"/>
 </launch>
