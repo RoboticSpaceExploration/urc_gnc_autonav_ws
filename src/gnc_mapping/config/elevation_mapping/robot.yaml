@@ -1,13 +1,13 @@
 input_sources:
         pointcloud_sensor:
                 type: pointcloud
-                topic: /zedm/zed_node/point_cloud/cloud_registered/downsample
+                topic: /zed2/point_cloud/cloud_registered/downsample
                 queue_size: 1
                 publish_on_update: true
                 sensor_processor:
                         type: structured_light
-                        ignore_points_above: 0.4
-                        ignore_points_below: -0.4
+                        ignore_points_above: 10.4
+                        ignore_points_below: -10.4
                         cutoff_min_depth: 0.2
                         cutoff_max_depth: 10.25
                         normal_factor_a: 0.000611

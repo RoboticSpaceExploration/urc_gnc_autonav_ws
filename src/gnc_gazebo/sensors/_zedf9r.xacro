@@ -45,7 +45,8 @@
                 <frameId>${name}_link</frameId>
                 <gaussianNoise>2</gaussianNoise>
                 <alwayson>true</alwayson>
-            </plugin>
+	</plugin>
+	<!--
             <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
                 <alwaysOn>true</alwaysOn>
                 <bodyName>${name}_link</bodyName>
@@ -53,7 +54,8 @@
                 <serviceName>imu_service</serviceName>
                 <gaussianNoise>0.1</gaussianNoise>
                 <updateRate>30.0</updateRate>
-            </plugin>
+		</plugin>
+	-->
         </gazebo>
     </xacro:macro>
 

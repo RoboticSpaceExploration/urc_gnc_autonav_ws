@@ -2,7 +2,7 @@ local_costmap:
    global_frame: odom
    robot_base_frame: base_link
    
-   update_frequency: 0.14
+   update_frequency: 30
    publish_frequency: 10
    transform_tolerance: 5.0
 
