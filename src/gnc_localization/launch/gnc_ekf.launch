@@ -15,7 +15,11 @@
 	<param name="broadcast_utm_transform" value="true"/>
         <param name="published_frame" value="odom"/>
 	<param name="yaw_offset" value="1.5708"/>
+<<<<<<< HEAD
         <remap from="imu/data" to="/zed2/zed_node/imu/data"/>
+=======
+        <remap from="imu/data" to="/zed2/imu/data"/>
+>>>>>>> 0ea2ffdef56c1fd4475f50f0ea65654c5185c430
         <remap from="gps/fix" to="/gps/fix"/>
         <remap from="odom" to="/odometry/filtered"/>
 

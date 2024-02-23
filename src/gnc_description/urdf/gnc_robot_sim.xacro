@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro"
+       name="gnc_robot_sim">
+
+  <xacro:arg name="fixed" default="false"/>
+  <xacro:arg name="robot_ns" default="" value=""/>
+
+  <xacro:include filename="$(find gnc_description)/urdf/gnc_robot.xacro"/>
+
+  <xacro:gnc_robot_sim robot_ns="$(arg robot_ns)"
+                     />
+
+</robot>

@@ -6,7 +6,11 @@ ekf_localization:
                    false, false, true,
                    false, false, false]
 
+<<<<<<< HEAD
     imu0: "/zed2/zed_node/imu/data"
+=======
+    imu0: "/zed2/imu/data"
+>>>>>>> 0ea2ffdef56c1fd4475f50f0ea65654c5185c430
     imu0_config: [false, false, false,
                   true, true, true,
                   false, false, false,

@@ -3,8 +3,8 @@
 <launch>
 
   <!-- load model into parameter server -->
-
-    <param name="robot_description" command="$(find xacro)/xacro '$(find gnc_description)/urdf/gnc_robot.xacro'"/>
+ 
+    <param name="robot_description" command="$(find xacro)/xacro '$(find gnc_description)/urdf/gnc_robot_sim.xacro'"/>
     
     
     <!-- coordinates to spawn model -->
