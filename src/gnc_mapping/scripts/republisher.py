@@ -33,7 +33,7 @@ if __name__ == '__main__':
         pose_pub = rospy.Publisher('/odometry/filtered/pose', PoseWithCovarianceStamped, queue_size=10)
 
         # Create a subscriber to the /odometry/filtered topic
-        rospy.Subscriber('/zed2/odom/sample', Odometry, odometry_callback)
+        rospy.Subscriber('/zed2/zed_node/odom/', Odometry, odometry_callback)
 
         # Keep the node running until it is stopped
         rospy.spin()

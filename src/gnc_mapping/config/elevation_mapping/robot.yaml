@@ -1,11 +1,7 @@
 input_sources:
         pointcloud_sensor:
                 type: pointcloud
-<<<<<<< HEAD
                 topic: /zed2/zed_node/point_cloud/cloud_registered/downsample
-=======
-                topic: /zed2/point_cloud/cloud_registered/downsample
->>>>>>> 0ea2ffdef56c1fd4475f50f0ea65654c5185c430
                 queue_size: 1
                 publish_on_update: true
                 sensor_processor:
