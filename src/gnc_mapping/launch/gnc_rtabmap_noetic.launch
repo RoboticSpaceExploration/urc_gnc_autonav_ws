@@ -1,10 +1,10 @@
 <launch>
  
     <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_sync/rgbd_sync" output="screen">
-      <remap from="rgb/image"       to="/ZEDMini/color/image_raw"/>
-      <remap from="depth/image"     to="/ZEDMini/depth/image_raw"/>
-      <remap from="rgb/camera_info" to="/ZEDMini/color/camera_info"/>
-      <remap from="rgbd_image"      to="/ZEDMini/rgbd_image"/> <!-- output -->
+      <remap from="rgb/image"       to="/zed2/zed_node/rgb/image_rect_color"/>
+      <remap from="depth/image"     to="/zed2/zed_node/depth/depth_registered"/>
+      <remap from="rgb/camera_info" to="/zed2/zed_node/rgb/camera_info"/>
+      <remap from="rgbd_image"      to="/zed2/zed_node/rgbd_image"/> <!-- output -->
       
       <param name="approx_sync"       value="true"/> 
     </node>
@@ -25,18 +25,17 @@
         <param name="RGBD/AngularUpdate" value="0.01"/>
 	<param name="Rtabmap/DetectionRate" value="5"/>
 
-<!--	
 	<param name="Grid/MinGroundHeight" value="0"/>
-	<param name="Grid/ClusterRadius" value="0.3"/>
+	<param name="Grid/ClusterRadius" value="5"/>
 	<param name="Grid/GridGlobal" value="1.5"/>
--->
+	
 	<param name="Grid/RangeMin" value="0.2"/>
 	
         <!-- Remapping ZED camera topics -->
-	<remap from="rgbd_image" to="/ZEDMini/rgbd_image"/>
+	<remap from="rgbd_image" to="/zed2/zed_node/rgbd_image"/>
 
         <!-- Remapping ZED odometry topic -->
-        <remap from="odom" to="/ZEDMini/odom/sample"/>
+        <remap from="odom" to="/zed2/zed_node/odom"/>
 
         <!-- Additional parameters for ZED -->
         <param name="visual_odometry" value="false"/> <!-- Use T265 odometry -->

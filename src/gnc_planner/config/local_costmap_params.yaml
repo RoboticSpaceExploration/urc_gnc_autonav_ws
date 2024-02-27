@@ -6,24 +6,18 @@ local_costmap:
    publish_frequency: 10
    transform_tolerance: 5.0
 
-   static_map: true
-   rolling_window: false
-  
- 
-   plugins:
-            - {name: static_layer, type: "costmap_2d::StaticLayer"}
-            - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
+   static_map: false 
+   rolling_window: true
 
-   static_layer:
-         map_topic: /elevation_map_raw_visualization/traversability_grid 
-         subscribe_to_updates: true
-   inflation_layer:
-            inflation_radius: 0.1
-            cost_scaling_factor: 6.0
-   #plugins:
-   #        - { name : obstacles, type: "costmap_2d::ObstacleLayer" }
-   #obstacles:
-   #        observation_sources: point_cloud_sensor
-   #        point_cloud_sensor: { sensor_frame: ZEDMini_optical_depth_frame, data_type: PointCloud2, topic: /ZEDMini/depth/points/downsample, marking: false, clearing: true} 
-   #        footprint_clearing_enabled: true
+   map_topic: /grid_map 
+   # plugins:
+           # - {name: static_layer, type: "costmap_2d::StaticLayer"}
+              # - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
+
+              # static_layer:
+           # map_topic: /elevation_map_raw_visualization/traversability_grid 
+         # subscribe_to_updates: true
+         #inflation_layer:
+           #inflation_radius: 0.1
+            #         cost_scaling_factor: 6.0
 

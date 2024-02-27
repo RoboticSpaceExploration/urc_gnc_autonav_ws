@@ -6,17 +6,16 @@ input_sources:
                 publish_on_update: true
                 sensor_processor:
                         type: structured_light
-                        ignore_points_above: 10.4
-                        ignore_points_below: -10.4
                         cutoff_min_depth: 0.2
-                        cutoff_max_depth: 10.25
+                        cutoff_max_depth: 9.5
                         normal_factor_a: 0.000611
                         normal_factor_b: 0.003587
                         normal_factor_c: 0.3515
                         normal_factor_d: 0
                         normal_factor_e: 1
                         lateral_factor: 0.01576
- 
+                        ignore_points_above: 1.4 
+                        ignore_points_below: -.inf 
 map_frame_id: "odom"
 robot_base_frame_id: "base_link"
 robot_pose_with_covariance_topic: "/odometry/filtered/pose"
@@ -25,4 +24,5 @@ track_point_frame_id: "base_link"
 track_point_x: 0.0
 track_point_y: 0.0
 track_point_z: 0.0
+enable_skip_lower_points: false
 

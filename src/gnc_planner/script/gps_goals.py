@@ -79,11 +79,12 @@ def start_node():
     init_gps_config()
     setup_move_base_result_listener()
 
-    msg = geo_point_stamped[0]
-    msg.header.stamp = rospy.Time.now()
-    pub.publish(msg)
 
-    print(currentCoord)
+    #msg = geo_point_stamped[0]
+    #msg.header.stamp = rospy.Time.now()
+    #pub.publish(msg)
+
+    #print(currentCoord)
     #  Start main node loop
     #while not rospy.is_shutdown():
     #    msg = geo_point_stamped[currentCoord]

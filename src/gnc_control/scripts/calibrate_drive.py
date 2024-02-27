@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import odrive
+from odrive.utils import *
 from odrive.enums import *
 import rospkg
 import json
@@ -26,23 +27,21 @@ def main():
         root = decoder.decode(json_text)
         # format of json is a list of option objects
         # with properties: name, type, value
-
-    if '0' in option or '1' in option:
-        odrv0 = odrive.find_any(serial_number='2052325E4D31')
+    odrv0 = odrive.find_any(serial_number='2052325E4D31')
+    print(dir(odrv0))
+    print(rate_test(odrv0))
+    
+    # if '0' in option or '1' in option:
+    #     odrv0 = odrive.find_any(serial_number='2052325E4D31')
         
-        if '0' in option:
-            print('Calibrating axis0 motor')
-            odrv0.axis0.requested_state = AxisState.FULL_CALIBRATION_SEQUENCE
-            print(odrv0.axis0.current_state)
-            print('Saving configuration')
-        if '1' in option:
-            odrv0.axis1.requested_state = AxisState.FULL_CALIBRATION_SEQUENCE
-            print(odrv0.axis1.current_state)
-
-    # if '2' in option:
-    #     pass
-    # if '3' in option:
-    #     pass
+    #     if '0' in option:
+    #         print('Calibrating axis0 motor')
+    #         odrv0.axis0.requested_state = AxisState.FULL_CALIBRATION_SEQUENCE
+    #         print(odrv0.axis0.current_state)
+    #         print('Saving configuration')
+    #     if '1' in option:
+    #         odrv0.axis1.requested_state = AxisState.FULL_CALIBRATION_SEQUENCE
+    #         print(odrv0.axis1.current_state)
 
 
 

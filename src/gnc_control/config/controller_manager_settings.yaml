@@ -18,7 +18,7 @@ gnc_robot:
     base_frame_id: base_link
 
     # Wheel separation and radius multipliers
-    wheel_separation_multiplier: 1.0 # default: 1.0
+    wheel_separation_multiplier: 2.0 # default: 1.0
     wheel_radius_multiplier    : 1.0 # default: 1.0
 
 
@@ -32,12 +32,12 @@ gnc_robot:
         max_velocity           :  10.0  # m/s
         min_velocity           : -10.0 # m/s
         has_acceleration_limits: true
-        max_acceleration       :  20.0  # m/s^2
-        min_acceleration       : -20.0 # m/s^2
+        max_acceleration       :  10.0  # m/s^2
+        min_acceleration       : -10.0 # m/s^2
     angular:
       z:
         has_velocity_limits    : true
-        max_velocity           : 4.0  # rad/s
+        max_velocity           : 8.0  # rad/s
         has_acceleration_limits: true
         max_acceleration       : 25.0  # rad/s^2
     # Base frame_id
