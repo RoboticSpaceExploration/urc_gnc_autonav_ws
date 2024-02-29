@@ -1,9 +1,9 @@
 <launch>
  
     <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_sync/rgbd_sync" output="screen">
-      <remap from="rgb/image"       to="/zed2/zed_node/rgb/image_rect_color"/>
+      <remap from="rgb/image"       to="/zed2/zed_node/left/image_rect_color"/>
       <remap from="depth/image"     to="/zed2/zed_node/depth/depth_registered"/>
-      <remap from="rgb/camera_info" to="/zed2/zed_node/rgb/camera_info"/>
+      <remap from="rgb/camera_info" to="/zed2/zed_node/left/camera_info"/>
       <remap from="rgbd_image"      to="/zed2/zed_node/rgbd_image"/> <!-- output -->
       
       <param name="approx_sync"       value="true"/> 

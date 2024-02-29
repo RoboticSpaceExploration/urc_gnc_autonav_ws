@@ -6,6 +6,6 @@
 		type="spawner"  
 		output="screen"  
 		ns="/gnc_robot" 
-		args="gnc_robot_velocity_controller 
+		args="gnc_drive_velocity_controller 
 			gnc_robot_joint_publisher" />
 </launch>

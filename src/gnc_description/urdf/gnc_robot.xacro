@@ -32,17 +32,24 @@
     <xacro:macro name="gnc_robot_sim" params="robot_ns:='${robot_ns}'">
 	    <xacro:zed2_gazebo robot_ns="${robot_ns}"/>
     </xacro:macro>   
-    <!--
+    
     <xacro:include filename="$(find gnc_gazebo)/sensors/_ZED2.xacro"/>
     <xacro:zed2 link_prefix="" joint_prefix="" />	    
-	    -->    
+    
+    <joint name="zed2_camera_center_joint" type="fixed">
+    	<parent link='base_link'/>
+	<child link="zed2_camera_center"/>
+	<origin xyz="0.6 0 0.0486" rpy="0 0.2782 0"/>
+    </joint>
+
+    <!--
     <link name="zed2_base_link"/>
     <joint name="zed2_camera_center_joint" type="fixed">
       <parent link="base_link"/>
       <child link="zed2_base_link"/>
       <origin xyz="0.6 0 0.0486" rpy="0 0.2782 0"/>
     </joint>
-
+    -->
     <!-- IMU GPS -->
     <xacro:include filename="$(find gnc_gazebo)/sensors/_zedf9r.xacro"/>
     <xacro:Sparkfun_zedf9r name="gps" parentLink="base_link">

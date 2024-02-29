@@ -45,7 +45,7 @@ def odom_listener():
     rospy.init_node('odom_to_tf_publisher')
 
     # Subscribe to the odometry topic
-    rospy.Subscriber('/zed2/odom/sample', Odometry, odom_callback)
+    rospy.Subscriber('/zed2/zed_node/odom', Odometry, odom_callback)
 
     # Spin to keep the script from exiting
     rospy.spin()
