@@ -7,7 +7,7 @@ from tf.transformations import quaternion_from_euler
 # Initialize ROS node
 rospy.init_node('spiral_goal_sender_map_frame')
 
-print("[*N] Start spiral...") 
+rospy.loginfo("Sending spiral trajectory to move_base") 
 # Define the action client to interact with the move_base server
 client = SimpleActionClient('move_base', MoveBaseAction)
 client.wait_for_server()

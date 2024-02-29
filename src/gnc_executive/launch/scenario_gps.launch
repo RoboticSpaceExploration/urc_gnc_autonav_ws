@@ -1,0 +1,3 @@
+<launch>
+	<node pkg="gnc_executive" type="gps_scenario" name="gps_smach"/>
+</launch>

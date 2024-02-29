@@ -5,6 +5,7 @@ from state.gate_traverse import GateTraverse
 from state.goto_gnss import GoToGNSS
 from state.spiral_search import SpiralSearch
 from state.aruco_scan import ARUCOScan
+from state.aruco_util import ARUCOUtil
 
 def main():
     rospy.init_node('smach_scenario')

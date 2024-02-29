@@ -1,0 +1,4 @@
+<launch>
+	<node pkg="gnc_executive" type="gps2utm_transform.py" name="gps_move_base" output="screen"/>
+	<node pkg="gnc_executive" type="gnss_coordinates.py" name="gnss_mission_node" output="screen"/>
+</launch>
