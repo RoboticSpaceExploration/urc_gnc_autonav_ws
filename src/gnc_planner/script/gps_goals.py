@@ -54,22 +54,32 @@ def check_move_base_result(result):
 
 def move_base_result_callback(msg):
     success = check_move_base_result(msg)
+    
+    if(not success):
+        print("Failed reaching checkpoint")
+        return
     print("Completed checkpoint, moving onto next one")
     global currentCoord
 
-    if success:
-        currentCoord += 1
     global pub
 
-    msg = geo_point_stamped[currentCoord]
-    msg.header.stamp = rospy.Time.now()
-    pub.publish(msg)
-    
+    if(currentCoord < len(gps_coords)):
+        msg = geo_point_stamped[currentCoord]
+        msg.header.stamp = rospy.Time.now()
+        msg.header.frame_id = "map"
+        pub.publish(msg)
+        
+        currentCoord += 1
+
+    else:
+        print("Completed mission")
+        exit(0)
 def setup_move_base_result_listener():
     rospy.Subscriber('/move_base/result', MoveBaseActionResult, move_base_result_callback)
 
 def start_node():
     global pub
+    global currentCoord 
 
     rospy.init_node('gps_goals_node')
     rate = rospy.Rate(100)
@@ -79,13 +89,15 @@ def start_node():
     init_gps_config()
     setup_move_base_result_listener()
 
+    rospy.sleep(2)
 
-    #msg = geo_point_stamped[0]
-    #msg.header.stamp = rospy.Time.now()
-    #pub.publish(msg)
+    currentCoord = 1
+    msg = geo_point_stamped[0]
+    msg.header.frame_id = "map"
+    msg.header.stamp = rospy.Time.now()
+    pub.publish(msg)
 
-    #print(currentCoord)
-    #  Start main node loop
+    print(msg)
     #while not rospy.is_shutdown():
     #    msg = geo_point_stamped[currentCoord]
     #    msg.header.stamp = rospy.Time.now()
