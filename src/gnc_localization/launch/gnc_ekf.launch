@@ -14,7 +14,7 @@
         <param name="zero_altitude" value="true"/>
 	<param name="broadcast_utm_transform" value="true"/>
         <param name="published_frame" value="odom"/>
-	<param name="yaw_offset" value="1.5708"/>
+	<param name="yaw_offset" value="0"/>
         <remap from="imu/data" to="/zed2/zed_node/imu/data"/>
         <remap from="gps/fix" to="/gps/fix"/>
         <remap from="odom" to="/odometry/filtered"/>

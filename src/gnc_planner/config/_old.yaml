@@ -1,0 +1,28 @@
+local_costmap:
+   global_frame: odom
+   robot_base_frame: base_link
+   
+   obstacle_range: 2.5
+   raytrace_range: 3.0
+
+   update_frequency: 2
+   publish_frequency: 2
+   transform_tolerance: 5.0
+   
+   static_map: false
+   rolling_window: true
+
+   #map_topic: /grid_map 
+
+   plugins:
+      - {name: static_layer, type: "costmap_2d::StaticLayer"}
+      - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
+
+   static_layer:
+     map_topic: /grid_map 
+     subscribe_to_updates: true
+   inflation_layer:
+         inflation_radius: 0.1
+         cost_scaling_factor: 0.1
+
+

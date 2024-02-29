@@ -26,7 +26,7 @@
 	<param name="Rtabmap/DetectionRate" value="5"/>
 
 	<param name="Grid/MinGroundHeight" value="0"/>
-	<param name="Grid/ClusterRadius" value="5"/>
+	<param name="Grid/ClusterRadius" value="10"/>
 	<param name="Grid/GridGlobal" value="1.5"/>
 	
 	<param name="Grid/RangeMin" value="0.2"/>

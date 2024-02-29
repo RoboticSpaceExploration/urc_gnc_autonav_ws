@@ -44,7 +44,7 @@
       <remap from="cloud" to="/d435i/depth/color/points"/>
       <remap from="obstacles" to="/planner_cloud"/>
 
-      <param name="frame_id" type="string" value="d435i_depth_frame"/>
+      <param name="frame_id" type="string" value="base_link"/>
       <param name="map_frame_id" type="string" value="odom"/>
   
       <param name="Grid/MinClusterSize" type="int" value="20"/>
