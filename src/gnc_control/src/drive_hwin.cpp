@@ -60,7 +60,11 @@ void DriveHwin::write()
 {
     // Update all odrive targets
     if (od->target_sn.size() < 2)
-        return;
+    {
+        // 
+        // try to reboot odrive
+        initializeOdrive();
+    }
 
     for (int i = 0; i < od->target_sn.size(); i++)
     {
@@ -252,6 +256,16 @@ int DriveHwin::initializeOdrive()
     }
 
     return 0;
+}
+
+int DriveHwin::rebootOdrive()
+{
+    delete od;
+
+    for (int i = 0; i < od->endpoint.size(); i++)
+    {
+        delete od->endpoint.at(i);
+    }
 }
 
 float DriveHwin::calculateVelocity(int ticks)
