@@ -9,15 +9,16 @@
     	<param name="odom0" value="/odometry/gps"/>
     </node>
 
+
     <!-- Navsat Transform Node -->
     <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform">
         <param name="zero_altitude" value="true"/>
 	<param name="broadcast_utm_transform" value="true"/>
-        <param name="published_frame" value="odom"/>
-	<param name="yaw_offset" value="1.5708"/>
+	<param name="published_frame" value="map"/>
+	<param name="yaw_offset" value="0"/>
         <remap from="imu/data" to="/zed2/zed_node/imu/data"/>
         <remap from="gps/fix" to="/gps/fix"/>
-        <remap from="odom" to="/odometry/filtered"/>
+        <remap from="odom" to="/zed2/zed_node/odom"/>
 	<param name="magnetic_declination_radians" value="0.15708"/>
     </node>
 </launch>

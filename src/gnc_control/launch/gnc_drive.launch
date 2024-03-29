@@ -6,12 +6,11 @@
     
     <node name="drive_node" pkg="gnc_control" type="drive_node" output="screen"/>
 
-	<node name="controller_manager_node"  
+    <node name="controller_manager_node"  
         pkg="controller_manager" 
         type="spawner" 
         output="screen" 
         args="/gnc_robot/gnc_drive_joint_publisher 
         /gnc_robot/gnc_drive_velocity_controller"/>
-    
 
 </launch>

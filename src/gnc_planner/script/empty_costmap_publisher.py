@@ -12,7 +12,7 @@ def publish_empty_costmap():
     # Create the OccupancyGrid message
     grid = OccupancyGrid()
     grid.header = Header()
-    grid.header.frame_id = "map"
+    grid.header.frame_id = "odom"
     grid.info.resolution = 0.1 # meters/cell
     grid.info.width = 100  # cells
     grid.info.height = 100  # cells

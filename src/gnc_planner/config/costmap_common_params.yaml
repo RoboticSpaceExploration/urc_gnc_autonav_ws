@@ -1,3 +1,8 @@
 robot_radius: 0.7
 default_tolerance: 2.0
+transform_tolerance: 1
+contorller_patience: 2.0
+
+NavfnROS:
+        allow_unknown: true
 

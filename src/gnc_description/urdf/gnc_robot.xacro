@@ -28,7 +28,7 @@
     <xacro:wheel name="wheel_Left_Back" mass="${wheelMass}" parentLink="base_link" WheelXOrigin="${BackWheelYOrigin}" WheelYOrigin="${RightWheelXOrigin}"/>
 
     <!-- Camera -->
- 
+    <!-- 
     <xacro:macro name="gnc_robot_sim" params="robot_ns:='${robot_ns}'">
 	    <xacro:zed2_gazebo robot_ns="${robot_ns}"/>
     </xacro:macro>   
@@ -41,7 +41,7 @@
 	<child link="zed2_camera_center"/>
 	<origin xyz="0.6 0 0.0486" rpy="0 0.2782 0"/>
     </joint>
-
+   -->
     <!--
     <link name="zed2_base_link"/>
     <joint name="zed2_camera_center_joint" type="fixed">

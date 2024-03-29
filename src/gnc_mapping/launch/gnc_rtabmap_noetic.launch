@@ -6,15 +6,16 @@
       <remap from="rgb/camera_info" to="/zed2/zed_node/left/camera_info"/>
       <remap from="rgbd_image"      to="/zed2/zed_node/rgbd_image"/> <!-- output -->
       
-      <param name="approx_sync"       value="true"/> 
+      <param name="approx_sync"       value="false"/> 
     </node>
 
 
     <!-- Node to launch RTAB-Map -->
-    <node name="rtabmap" pkg="rtabmap_slam" args="-d" type="rtabmap" output="screen">
+    <node name="rtabmap" pkg="rtabmap_slam" args="--delete_db_on_start" type="rtabmap" output="screen">
         <!-- Common parameters -->
 	<param name="frame_id" value="base_link"/>
-	
+  	<param name="map_frame_id" value="odom"/>
+		
 	<param name="subscribe_depth" value="false"/>
         <param name="subscribe_rgbd" value="true"/>
         <param name="subscribe_scan" value="false"/>
@@ -25,9 +26,11 @@
         <param name="RGBD/AngularUpdate" value="0.01"/>
 	<param name="Rtabmap/DetectionRate" value="5"/>
 
+	<param name="Grid/NormalsSegmentation" value="true"/>
 	<param name="Grid/MinGroundHeight" value="0"/>
-	<param name="Grid/ClusterRadius" value="5"/>
-	<param name="Grid/GridGlobal" value="1.5"/>
+	<param name="Grid/ClusterRadius" value="0.1"/>
+	<param name="Grid/MinClusterSize" value="10"/>
+	<param name="Grid/GridGlobal" value="3"/>
 	
 	<param name="Grid/RangeMin" value="0.2"/>
 	
@@ -35,8 +38,8 @@
 	<remap from="rgbd_image" to="/zed2/zed_node/rgbd_image"/>
 
         <!-- Remapping ZED odometry topic -->
-        <remap from="odom" to="/zed2/zed_node/odom"/>
-
+	<remap from="odom" to="/zed2/zed_node/odom"/>
+	<remap from="/gps/fix" to="/dont/use/gps"/>
         <!-- Additional parameters for ZED -->
         <param name="visual_odometry" value="false"/> <!-- Use T265 odometry -->
     </node>

@@ -35,7 +35,7 @@ postprocessor_pipeline: # set by postprocessor_pipeline_name
     params:
       input_layer: elevation_inpainted
       output_layers_prefix: normal_vectors_
-      radius: 0.2
+      radius: 0.05
       normal_vector_positive_axis: z
 
   # Add a color layer for visualization based on the surface normal.

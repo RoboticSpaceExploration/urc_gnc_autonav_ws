@@ -6,7 +6,7 @@ from std_msgs.msg import Header
 from gnc_executive.srv import GetNextCoordinate, GetNextCoordinateResponse  # Update with your package name
 
 # Path to the file containing GPS coordinates
-file_path = '/home/napporo/Desktop/urc_gnc_autonav_ws/src/gnc_executive/mission/coordinates.txt'
+file_path = '/home/roselab/Desktop/urc_gnc_autonav_ws/src/gnc_executive/mission/coordinates.txt'
 gps_coords = []
 current_coord_index = 0
 

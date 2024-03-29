@@ -1,5 +1,7 @@
 #include "gnc_control/drive_hwin.h"
 
+#include <std_msgs/Empty.h>
+
 DriveHwin::DriveHwin(ros::NodeHandle *nh, const DriveHwinSettings &settings)
     : driveSettings(settings), nh(nh)
 {
@@ -8,12 +10,13 @@ DriveHwin::DriveHwin(ros::NodeHandle *nh, const DriveHwinSettings &settings)
 
     if (initializeOdrive())
     {
-        ROS_ERROR("Couldn't initialize odrive. Exiting program");
-        ros::shutdown();
+        ROS_ERROR("Couldn't initialize odrive. Waiting for both motor controllers to plug in");
     }
 
     // initialize time
     clock_gettime(CLOCK_MONOTONIC, &lastTime);
+
+    ros::Subscriber testSub;
 
     for (int i = 0; i < 4; i++)
         cmd[i] = pos[i] = vel[i] = eff[i] = 0;
@@ -56,6 +59,9 @@ void DriveHwin::read()
 void DriveHwin::write()
 {
     // Update all odrive targets
+    if (od->target_sn.size() < 2)
+        return;
+
     for (int i = 0; i < od->target_sn.size(); i++)
     {
         // should only be 2 motor controllers maximum, left then right
@@ -85,8 +91,8 @@ void DriveHwin::write()
 	*/
 
         // update watchdog
-        //execOdriveFunc(endpoint, odrive_json, "axis0.watchdog_feed");
-        //execOdriveFunc(endpoint, odrive_json, "axis1.watchdog_feed");
+        // execOdriveFunc(endpoint, odrive_json, "axis0.watchdog_feed");
+        // execOdriveFunc(endpoint, odrive_json, "axis1.watchdog_feed");
 
         // variables for sending to motor controller
         // ros control multiplies cmd_vel by 5, 31.4 is     
@@ -99,7 +105,10 @@ void DriveHwin::write()
         std::string cmdAxis1 = "axis1.controller.input_vel";
 
         // send drive cmd to motor controller
-        writeOdriveData(endpoint, odrive_json, cmdAxis0, axis0_fval);
+        if (writeOdriveData(endpoint, odrive_json, cmdAxis0, axis0_fval))
+        {
+            ROS_INFO("Error odrive");
+        }
         writeOdriveData(endpoint, odrive_json, cmdAxis1, axis1_fval);
     }
 
@@ -205,7 +214,7 @@ int DriveHwin::initializeOdrive()
         od->odrive_pub.push_back(
             nh->advertise<gnc_control::odrive_msg>("odrive_msg_" + od->target_sn.at(i), 100));
         // od->odrive_sub.push_back(
-        //     nh->subscribe("odrive_ctrl_" + od->target_sn.at(i), 10, msgCallback));
+        // nh->subscribe("odrive_ctrl_" + od->target_sn.at(i), 10, msgCallback));
 
         // Get odrive endpoint instance
         od->endpoint.push_back(new odrive_endpoint());
@@ -227,10 +236,10 @@ int DriveHwin::initializeOdrive()
         od->json.push_back(odrive_json);
 
         // Process configuration file
-        execOdriveFunc(od->endpoint.at(i), od->json.at(i), 
-            "axis0.clear_errors");
-        execOdriveFunc(od->endpoint.at(i), od->json.at(i), 
-            "axis1.clear_errors");
+        // execOdriveFunc(od->endpoint.at(i), od->json.at(i), 
+        //     "axis0.clear_errors");
+        // execOdriveFunc(od->endpoint.at(i), od->json.at(i), 
+        //     "axis1.clear_errors");
         //updateTargetConfig(od->endpoint.at(i), od->json.at(i), od->target_cfg.at(i));
 
         // enter closed loop drive after configuration
