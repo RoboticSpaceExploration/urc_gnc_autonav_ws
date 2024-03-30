@@ -16,7 +16,8 @@ Ex. <param name="video_device" value="/dev/video0 <---" />
 #---------View in Web Server---------------
 1.launch camera feed
 2. rosrun web_video_server web_video_server
-3. http://0.0.0.0:8080/ (currently on default settings, ip should be changed to robot ip)
+3. roslaunch rosbridge_server rosbridge_websocket.launch
+4. http://0.0.0.0:8080/ (currently on default settings, ip should be changed to robot ip)
 
 
 #--------Run Camera Instructions------------
