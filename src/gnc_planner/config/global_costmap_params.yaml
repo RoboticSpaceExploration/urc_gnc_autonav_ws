@@ -1,25 +1,7 @@
 global_costmap:
-   global_frame: map
-   robot_base_frame: base_footprint
-   
-   update_frequency: 2.0
-   publish_frequency: 2.0
-   transform_tolerance: 5.0
-
-   width: 100.0
-   height: 100.0
-   resolution: 0.1
-   rolling_window: true
-   static_map: true 
-
-   map_topic: /global_costmap
-   #plugins:
-   #         - {name: static_layer, type: "costmap_2d::StaticLayer"}
-   #         - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
-   #
-   #static_layer:
-   #      map_topic: /elevation_map_raw_visualization/traversability_grid 
-   #      subscribe_to_updates: true
-   #inflation_layer:
-   #         inflation_radius: 0.1
-   #         cost_scaling_factor: 1.0 
+  global_frame: map
+  robot_base_frame: base_link
+  update_frequency: 0.5
+  publish_frequency: 0.5
+  static_map: true
+  map_topic: /global_costmap

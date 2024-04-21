@@ -3,7 +3,8 @@
 import rospy
 from geographic_msgs.msg import GeoPointStamped,GeoPoint
 from std_msgs.msg import Header
-from gnc_executive.srv import GetNextCoordinate, GetNextCoordinateResponse  # Update with your package name
+from gnc_executive.srv import GetNextCoordinate, GetNextCoordinateResponse  
+import numpy as np
 
 # Path to the file containing GPS coordinates
 file_path = '/home/roselab/Desktop/urc_gnc_autonav_ws/src/gnc_executive/mission/coordinates.txt'
@@ -19,9 +20,8 @@ def load_gps_coordinates(file_path):
         with open(file_path, 'r') as file:
             lines = file.readlines()
             for line in lines:
-                if line.strip():  # Check if line is not empty
-                    
-                    latitude, longitude, altitude = map(float, line.strip().split(','))
+                if line.strip():  
+                    latitude, longitude, altitude = map(np.float64, line.strip().split(','))
                     gps_coords.append(GeoPointStamped(
                         header=Header(stamp=rospy.Time.now()),
                         position=GeoPoint(latitude=latitude, longitude=longitude, altitude=altitude)
@@ -39,9 +39,8 @@ def get_next_coordinate(req):
         current_coord_index += 1
         return GetNextCoordinateResponse(next_coordinate)
     else:
-        # Optionally, reset index or indicate completion
         rospy.logwarn("No more coordinates.")
-        return GetNextCoordinateResponse(GeoPointStamped())  # Return an empty message
+        return GetNextCoordinateResponse(GeoPointStamped()) 
 
 def gps_coordinate_service():
     """

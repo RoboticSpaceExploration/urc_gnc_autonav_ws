@@ -1,60 +1,58 @@
 import rospy
 import actionlib
+import tf2_ros
 from smach import State
+from geometry_msgs.msg import Twist, PointStamped
+from tf2_geometry_msgs import do_transform_point
+from tf2_ros import Buffer, TransformListener
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
-from aruco_msgs.msg import MarkerArray  # Assuming aruco_msgs is the message type
+from fiducial_msgs.msg import FiducialTransformArray
 
 class GateTraverse(State):
     def __init__(self):
-        State.__init__(self, outcomes=['completed', 'failed'])
-        #self.aruco_sub = rospy.Subscriber('/aruco_marker_publisher/markers', MarkerArray, self.aruco_callback)
-        self.move_base_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+        State.__init__(self, outcomes=['traversed', 'failed'],input_keys=['markers'])
+        self.tf_buffer = Buffer()
+        self.tf_listener = TransformListener(self.tf_buffer)
+        self.cmd_vel_pub = rospy.Publisher('/gnc_robot/gnc_drive_velocity_controller/cmd_vel', Twist, queue_size=1)
         self.detected_markers = []
-
-    def aruco_callback(self, msg):
-        self.detected_markers = msg.markers
-
-    def calculate_goal(self, marker):
-        goal_distance = 3.0  # meters
-
-        # Convert quaternion to Euler angles to get orientation
-        orientation = [aruco_pose.pose.orientation.x,
-                       aruco_pose.pose.orientation.y,
-                       aruco_pose.pose.orientation.z,
-                       aruco_pose.pose.orientation.w]
-        euler = tf.transformations.euler_from_quaternion(orientation)
-
-        # Calculate goal point that is 3 meters away from the ARUCO tag
-        goal_x = aruco_pose.pose.position.x + goal_distance * rospy.cos(euler[2])
-        goal_y = aruco_pose.pose.position.y + goal_distance * rospy.sin(euler[2])
-
-        # Create a new PoseStamped for the goal, assuming the same frame_id and orientation as the ARUCO tag
-        goal_pose = PoseStamped()
-        goal_pose.header.frame_id = aruco_pose.header.frame_id
-        goal_pose.pose.position.x = goal_x
-        goal_pose.pose.position.y = goal_y
-        goal_pose.pose.orientation = Quaternion(*tf.transformations.quaternion_from_euler(0, 0, euler[2]))
-
-        return goal_pose
 
     def execute(self, userdata):
         rospy.loginfo('Going through ARUCO tags')
-        self.move_base_client.wait_for_server()
 
-        if not self.detected_markers:
-            rospy.loginfo('No ARUCO tags detected')
-            return 'failed'
+        marker = userdata.markers
+        direction_norm = 10000
 
-        for marker in self.detected_markers:
-            goal = self.calculate_goal(marker)
-            self.move_base_client.send_goal(goal)
-            self.move_base_client.wait_for_result()
+        while(direction_norm > 0.25):
 
-            if self.move_base_client.get_state() == actionlib.GoalStatus.SUCCEEDED:
-                rospy.loginfo('Successfully reached goal near ARUCO tag')
-            else:
-                rospy.loginfo('Failed to reach goal near ARUCO tag')
+            print(direction_norm)
+            # Get transform from base_link to fiducial
+            try:
+                bl_transform = self.tf_buffer.lookup_transform('base_link', "fiducial_"+str(marker.transforms[0].fiducial_id), rospy.Time(0))
+            except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
+                rospy.logerr("Failed to get transform from base_link to {}".format(marker.header.frame_id))
                 return 'failed'
+            
+            transform = marker.transforms[0]
 
-        return 'completed'
+            # Transform fiducial position to base_link frame
+            fiducial_point = PointStamped()
+            fiducial_point.header.frame_id = marker.header.frame_id
+            fiducial_point.point.x = transform.transform.translation.x
+            fiducial_point.point.y = transform.transform.translation.y
+            fiducial_point.point.z = transform.transform.translation.z
+            fiducial_point_transformed = do_transform_point(fiducial_point, bl_transform)
+            # Calculate direction vector from robot base to fiducial
+            direction_vector = fiducial_point_transformed.point
+            direction_norm = ((direction_vector.x ** 2) + (direction_vector.y ** 2)) ** 0.5
+
+            # Set linear velocity towards the fiducial
+            cmd_vel_msg = Twist()
+            cmd_vel_msg.linear.x = 0.3 * direction_vector.x 
+            cmd_vel_msg.linear.y = 0.3 * direction_vector.y 
+
+            # Publish cmd_vel command
+            self.cmd_vel_pub.publish(cmd_vel_msg)
+
+            
+        return 'traversed'
 

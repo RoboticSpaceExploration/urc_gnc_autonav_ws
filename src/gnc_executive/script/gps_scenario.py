@@ -9,7 +9,7 @@ def main():
 
     with sm:
         
-        smach.StateMachine.add('GOTO_GNSS', GoToGNSS(waypoint=[0, 0]),
+        smach.StateMachine.add('GOTO_GNSS', GoToGNSS(),
                                transitions={'succeeded':'GOTO_GNSS',
                                             'failed':'mission_failed'})
 

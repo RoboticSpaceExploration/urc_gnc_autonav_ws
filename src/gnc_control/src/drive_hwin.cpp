@@ -8,9 +8,13 @@ DriveHwin::DriveHwin(ros::NodeHandle *nh, const DriveHwinSettings &settings)
     registerStateHandlers();
     registerJointVelocityHandlers();
 
-    if (initializeOdrive())
+    try 
     {
-        ROS_ERROR("Couldn't initialize odrive. Waiting for both motor controllers to plug in");
+        initializeOdrive();
+    }
+    catch (const runtime_error &e)
+    {
+        ROS_ERROR_STREAM("Error initializing odrive");
     }
 
     // initialize time
@@ -58,14 +62,12 @@ void DriveHwin::read()
 
 void DriveHwin::write()
 {
-    // Update all odrive targets
-    if (od->target_sn.size() < 2)
-    {
-        // 
-        // try to reboot odrive
-        initializeOdrive();
-    }
+//     if (od->endpoint.size() < 2)
+//     {
+//         rebootOdrive();
+//     }
 
+    // Update all odrive targets
     for (int i = 0; i < od->target_sn.size(); i++)
     {
         // should only be 2 motor controllers maximum, left then right
@@ -111,7 +113,7 @@ void DriveHwin::write()
         // send drive cmd to motor controller
         if (writeOdriveData(endpoint, odrive_json, cmdAxis0, axis0_fval))
         {
-            ROS_INFO("Error odrive");
+            ROS_INFO("Error writing odrive data");
         }
         writeOdriveData(endpoint, odrive_json, cmdAxis1, axis1_fval);
     }
@@ -260,12 +262,23 @@ int DriveHwin::initializeOdrive()
 
 int DriveHwin::rebootOdrive()
 {
-    delete od;
-
+    // TODO make odrive delete resources it owns on its own
     for (int i = 0; i < od->endpoint.size(); i++)
     {
         delete od->endpoint.at(i);
     }
+    delete od;
+
+    try 
+    {
+        initializeOdrive();
+    }
+    catch (const runtime_error &e)
+    {
+        ROS_ERROR_STREAM("Error initializing odrive");
+        return -1;
+    }
+    return 0;
 }
 
 float DriveHwin::calculateVelocity(int ticks)
