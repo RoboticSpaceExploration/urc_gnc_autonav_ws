@@ -1,4 +1,5 @@
 <launch>
+    <remap from="map" to="/proj_map"/>
     <!-- Node for move_base -->
     <node name="empty_costmap_publisher" pkg="gnc_planner" type="empty_costmap_publisher.py" output="screen" />
     <node name="move_base" pkg="move_base" type="move_base" respawn="false" output="screen">

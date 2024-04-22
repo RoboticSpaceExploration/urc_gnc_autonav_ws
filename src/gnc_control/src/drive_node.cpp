@@ -62,9 +62,7 @@ int GetYamlParameters(ros::NodeHandle &nh, DriveHwinSettings &driveSettings)
 }
 
 /**
- *
  * Node main function
- *
  */
 int main(int argc, char **argv)
 {

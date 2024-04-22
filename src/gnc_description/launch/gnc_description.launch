@@ -14,6 +14,8 @@
 -->
     <node pkg="tf" type="static_transform_publisher" name="world_link_broadcaster" args="0 0 0 0 0 0 1 world map 20" />
     
+    <node pkg="tf" type="static_transform_publisher" name="footprint_link_broadcaster" args="0 0 0 0 0 0 1 base_link base_footprint 20" />
+    
     <!-- 
     <node pkg="protobot_description" type="odom_to_tf_node" name="odom_to_tf_node">
     	<remap from="camera/odom/sample" to="track_cam/odom/sample"/>

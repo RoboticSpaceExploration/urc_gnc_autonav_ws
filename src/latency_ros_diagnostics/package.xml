@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>latency_ros_diagnostics</name>
+  <version>0.0.1</version>
+  <description>The latency_ros_diagnostics package</description>
+
+  <!-- Maintainer details: Update with your information -->
+  <maintainer email="your_email@example.com">Your Name</maintainer>
+
+  <!-- License information -->
+  <license>BSD</license>
+
+  <!-- URL tags for the package's website, source repository, and bug tracker -->
+  <url type="website">http://wiki.ros.org/tegra_ros_diagnostics</url>
+  <url type="repository">https://github.com/your_repository/tegra_ros_diagnostics</url>
+  <url type="bugtracker">https://github.com/your_repository/tegra_ros_diagnostics/issues</url>
+
+  <!-- Author tags are optional -->
+  <!-- <author email="your_email@example.com">Your Name</author> -->
+
+  <!-- The "buildtool_depend" tag is used to specify the build system -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies for building the package -->
+  <build_depend>rospy</build_depend>
+  <build_depend>diagnostic_msgs</build_depend>
+
+  <!-- Dependencies for running the package -->
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>diagnostic_msgs</exec_depend>
+
+  <!-- If your package is a Python package and you're using Python 3 -->
+  <!-- Make sure to include the following line for ROS Noetic as it defaults to Python 3 -->
+  <export>
+    <build_type>catkin</build_type>
+    <python_executable>/usr/bin/python3</python_executable>
+    <python_version>3</python_version>
+  </export>
+</package>
+

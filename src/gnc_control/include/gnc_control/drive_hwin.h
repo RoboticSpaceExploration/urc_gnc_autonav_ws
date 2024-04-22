@@ -44,6 +44,7 @@ private:
 
     // Wheel functionality
     int initializeOdrive();
+    int rebootOdrive(); 
 
     DriveHwinSettings driveSettings;
     ros::NodeHandle *nh;
