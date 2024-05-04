@@ -17,11 +17,13 @@ catkin_python_setup()
 add_service_files(
   FILES
   GetNextCoordinate.srv
+  UpdateCoordinates.srv
   GPS2UTM.srv
  )
 
 generate_messages(
    DEPENDENCIES
+   std_msgs
    geographic_msgs  # Or other packages containing msgs
  )
 
