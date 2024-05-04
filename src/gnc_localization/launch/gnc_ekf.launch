@@ -8,13 +8,14 @@
     </node>
     <!-- Navsat Transform Node -->
     <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform">
-        <param name="zero_altitude" value="true"/>
+        <param name="frequency" value="1"/>
+	<param name="zero_altitude" value="true"/>
 	<param name="broadcast_utm_transform" value="true"/>
 	<param name="published_frame" value="map"/>
-	<param name="yaw_offset" value="0.0"/>
+	<param name="yaw_offset" value="0.0"/> <!-- -1.57 -->
         <remap from="imu/data" to="/zed2/zed_node/imu/data"/>
-        <remap from="gps/fix" to="/gps/fix"/>
-        <remap from="odom" to="/zed2/zed_node/odom"/>
+        <remap from="gps/fix" to="/gps/fix/time"/>
+        <remap from="odom" to="/odometry/filtered"/>
 	<param name="magnetic_declination_radians" value="0.166"/>
     </node>
 </launch>

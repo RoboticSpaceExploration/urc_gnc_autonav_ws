@@ -25,3 +25,6 @@
 [submodule "src/ar_track_alvar"]
 	path = src/ar_track_alvar
 	url = https://github.com/ros-perception/ar_track_alvar
+[submodule "src/darknet_ros"]
+	path = src/darknet_ros
+	url = https://github.com/leggedrobotics/darknet_ros.git

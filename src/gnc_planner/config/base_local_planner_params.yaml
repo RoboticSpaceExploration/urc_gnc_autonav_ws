@@ -20,7 +20,7 @@ TrajectoryPlannerROS:
    dwa: true
    min_in_place_rotational_vel: 0.2
 
-   sim_time: 3.5
+   sim_time: 5.0 
    sim_granularity: 0.025
    vx_samples: 10
    vtheta_sample: 3

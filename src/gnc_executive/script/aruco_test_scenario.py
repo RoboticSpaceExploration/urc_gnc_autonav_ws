@@ -5,6 +5,7 @@ import smach
 from state.wait import Wait
 from state.aruco_scan import ARUCOScan
 from state.gate_traverse import GateTraverse
+from state.spiral_search import SpiralSearch
 
 def main():
     rospy.init_node('smach_scenario')
@@ -12,12 +13,10 @@ def main():
     sm = smach.StateMachine(outcomes=['detected', 'not_detected'])
 
     with sm:
-        smach.StateMachine.add('ARUCOScan', ARUCOScan(),
-                               transitions={'not_found':'Wait',
+        smach.StateMachine.add('SpiralSearch', SpiralSearch(),
+                               transitions={'not_found':'SpiralSearch',
                                             'found':'GateTraverse'}
                                )
-        smach.StateMachine.add('Wait', Wait(),
-                                transitions={'complete':'ARUCOScan'})
         smach.StateMachine.add('GateTraverse', GateTraverse(),
                                 transitions={'traversed':'detected',
                                                 'failed':'not_detected'}

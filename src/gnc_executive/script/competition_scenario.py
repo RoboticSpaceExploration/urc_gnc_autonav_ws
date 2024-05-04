@@ -13,17 +13,14 @@ def main():
     sm = smach.StateMachine(outcomes=['mission_completed', 'mission_failed'])
 
     with sm:
-        smach.StateMachine.add('GOTO_GNSS', GoToGNSS(waypoint=[0, 0]),
+        smach.StateMachine.add('GOTO_GNSS', GoToGNSS(),
                                transitions={'succeeded':'SEARCH_FOR_ARUCO_TAGS',
                                             'failed':'mission_failed'})
         smach.StateMachine.add('SEARCH_FOR_ARUCO_TAGS', ARUCOScan(),
-                               transitions={'completed':'GATE_TRAVERSE',
-                                            'not_found':'SPIRAL_SEARCH'})
-        smach.StateMachine.add('SPIRAL_SEARCH', SpiralSearch(),
-                               transitions={'found':'SEARCH_FOR_ARUCO_TAGS',
-                                            'not_found':'mission_failed'})
+                               transitions={'found':'GATE_TRAVERSE',
+                                            'not_found':'SEARCH_FOR_ARUCO_TAGS'})
         smach.StateMachine.add('GATE_TRAVERSE', GateTraverse(),
-                               transitions={'completed':'mission_completed',
+                               transitions={'traversed':'GOTO_GNSS',
                                             'failed': 'mission_failed'})
 
             

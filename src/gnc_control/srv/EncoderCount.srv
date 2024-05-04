@@ -1,0 +1,6 @@
+# request
+uint8 address
+int8 motor
+---
+# response
+int32 position

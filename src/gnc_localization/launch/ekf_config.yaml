@@ -1,29 +1,90 @@
 ekf_localization:
+    frequency: 30 
+     
+    predict_to_current_time: True
+
     odom0: "/odometry/gps"
     odom0_config: [true, true, true,
-                   false, false, false,
-                   false, false, false,
+                   false, false, false, 
+                   false, false, false, 
                    false, false, false,
                    false, false, false]
+
+                   #odom0_pose_rejection_threshhold: 5
+                   #odom0_twist_rejection_threshold: 1
+                   #odom0_differential: true 
+    odom0_queue_size: 10
+    odom0_nodelay: false
 
     odom1: "/zed2/zed_node/odom"
-    odom1_config: [true, true, true,
+    odom1_config: [ true, true, false,
+                   true, true, true, 
                    false, false, false,
                    false, false, false,
+                   false, false, false ]
+    odom1_differential: true
+    #imu0_nodelay: false
+    #
+    #imu0_queue_size: 5
+    #imu0_differential: false
+    #imu0_pose_rejection_threshold: 0.8                 # Note the difference in parameter names
+    #imu0_twist_rejection_threshold: 0.8                #
+    #imu0_linear_acceleration_rejection_threshold: 0.8  #    
+    #imu0_remove_gravitational_acceleration: true 
+
+
+    twist0: "/zed2/zed_node/odom/twist"
+    twist0_config: [false, false, false,
+                   false, false, false, 
+                   true, true, true, 
                    false, false, false,
                    false, false, false]
-
-
-
-    imu0: "/zed2/zed_node/imu/data"
-    imu0_config: [false, false, false,
-                  true, true, true,
-                  false, false, false,
-                  false, false, false,
-                  false, false, false]
-    imu0_remove_gravitational_acceleration: true
+    
+                   #                #twist0_differential: false 
     publish_tf: true 
     two_d_mode: true      
     zero_altitude: true
+    #odom1_queue_size: 10
 
-    transform_time_offset: 0.1
+    transform_time_offset: 0.0
+    transform_timeout: 0.0
+
+    sensor_timeout: 0.1
+
+    print_diagnostics: true
+
+    process_noise_covariance: [1e-3, 0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                           0,    1e-3, 0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                           0,    0,    1e-3, 0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                           0,    0,    0,    0.03, 0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                           0,    0,    0,    0,    0.03, 0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                           0,    0,    0,    0,    0,    0.06, 0,     0,     0,    0,    0,    0,    0,    0,    0,
+                           0,    0,    0,    0,    0,    0,    0.025, 0,     0,    0,    0,    0,    0,    0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0.025, 0,    0,    0,    0,    0,    0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0.04, 0,    0,    0,    0,    0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0.01, 0,    0,    0,    0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0.01, 0,    0,    0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0.02, 0,    0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0.01, 0,    0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0.01, 0,
+                           0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0.015]
+
+
+    initial_estimate_covariance: [1e-9, 0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    1e-9, 0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    1e-9, 0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    1e-9, 0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    1e-9, 0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    1e-9, 0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    1e-9, 0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    1e-9, 0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    1e-9, 0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    1e-9,  0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     1e-9,  0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     1e-9,  0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     1e-9, 0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    1e-9, 0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    1e-9]
+
+
+

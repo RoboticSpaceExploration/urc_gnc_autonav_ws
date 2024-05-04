@@ -1,9 +1,6 @@
 
 <launch>
 	<include file="$(find gnc_description)/launch/gnc_description.launch"/>
-	<include file="$(find gnc_localization)/launch/gnc_localization.launch"/>
-	<!--
-	<include file="$(find gnc_mapping)/launch/gnc_rtabmap_noetic.launch"/> 
-	-->
-
+        <node pkg="gnc_ground" type="launch_node_service.py" name="node_bootstrapper"/>
+	<include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
 </launch>
