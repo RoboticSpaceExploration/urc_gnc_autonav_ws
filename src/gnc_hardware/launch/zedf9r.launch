@@ -3,11 +3,22 @@
 <launch>
  <include file="$(find ublox_gps)/launch/ublox_device.launch">
 	 <arg name="node_name" value="gps"/>
-  <arg name="param_file_name" value="zed_f9p"/>
-  <arg name="output" value="screen"/>
-  <arg name="respawn" value="true"/>
-  <arg name="respawn_delay" value="30"/>
-  <arg name="clear_params" value="false"/> 
+         <arg name="param_file_name" value="c94_m8p_rover"/>
+         <arg name="output" value="screen"/>
+         <arg name="respawn" value="true"/>
+         <arg name="respawn_delay" value="30"/>
+         <arg name="clear_params" value="false"/> 
  </include>
   
-</launch>
+	</launch>
+	<!--
+<launch>
+ 
+  <node pkg="nmea_navsat_driver" type="nmea_serial_driver" name="navsat">
+	<param name="port" value="/dev/ttyACM0"/>
+        <param name="baud" value="9600"/> 	
+	<param name="frame_id" value="gps_link"/>
+   </node>
+		</launch>
+
+	-->

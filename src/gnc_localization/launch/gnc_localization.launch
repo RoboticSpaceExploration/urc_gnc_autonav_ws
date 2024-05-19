@@ -1,6 +1,6 @@
 <launch>
-        <node pkg="gnc_Localization" type="gps_time.py" />
+        <node pkg="gnc_localization" type="gps_time.py" name="gps_time_fix" />
 	<include file="$(find gnc_localization)/launch/gnc_ekf.launch"/>
-<!--	<include file="$(find gnc_localization)/launch/gnc_madgwick.launch"/>
--->
+	<include file="$(find gnc_localization)/launch/gnc_madgwick.launch"/>
+
 </launch>

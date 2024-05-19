@@ -14,7 +14,7 @@ gnc_robot:
     cmd_vel_timeout: 0.05
     wheel_radius: 0.09
     wheel_separation: 0.75
-    enable_odom_tf: false
+    enable_odom_tf: true 
     base_frame_id: base_link
 
     # Wheel separation and radius multipliers
@@ -42,9 +42,9 @@ gnc_robot:
         max_acceleration       : 25.0  # rad/s^2
     # Base frame_id
     # base_frame_id: base_footprint
-    # odom_frame: odom
-    # base_link_frame: base_link
-    # world_frame: odom 
+    #odom_frame: odom
+    #base_link_frame: base_link
+    #world_frame: odom 
     #frequency: 50
 
 

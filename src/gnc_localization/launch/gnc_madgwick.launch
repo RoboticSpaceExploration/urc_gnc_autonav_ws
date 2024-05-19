@@ -14,7 +14,6 @@
         <!-- Remap the IMU and magnetometer topics -->
         <remap from="imu/data_raw" to="/zed2/zed_node/imu/data_raw"/>
         <remap from="imu/mag" to="/zed2/zed_node/imu/mag"/>
-
         <!-- Additional parameters can be set here -->
     </node>
 </launch>

@@ -1,0 +1,4 @@
+<launch>
+    <node name="heading_calib" pkg="gnc_localization" type="heading_calibration.py" output="screen">
+    </node>
+</launch>

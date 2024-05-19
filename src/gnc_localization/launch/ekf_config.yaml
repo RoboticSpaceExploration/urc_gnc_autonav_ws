@@ -1,4 +1,24 @@
-ekf_localization:
+local_ekf_localization:
+    frequency: 30 
+     
+    #predict_to_current_time: True
+
+    odom0: "/gnc_robot/gnc_drive_velocity_controller/odom"
+    odom0_config: [ false, false, false,
+              true, true, true, 
+              false, false, false,
+              false, false, false,
+              false, false, false ]
+     
+    imu0: "/imu/data"
+    imu0_config: [ false, false, false,
+              true, false, false, 
+              false, false, false,
+              true, true, false,
+              true, true, false]
+    
+ 
+global_ekf_localization:
     frequency: 30 
      
     predict_to_current_time: True
@@ -15,31 +35,49 @@ ekf_localization:
                    #odom0_differential: true 
     odom0_queue_size: 10
     odom0_nodelay: false
+    odom0_differential: false
+    odom0_relative: false 
 
-    odom1: "/zed2/zed_node/odom"
-    odom1_config: [ true, true, false,
-                   true, true, true, 
-                   false, false, false,
-                   false, false, false,
+    odom1: "/gnc_robot/gnc_drive_velocity_controller/odom"
+    odom1_config: [ false, false, false,
+                   false, false, false, 
+                   true, true, true,
+                   false, false, true,
                    false, false, false ]
-    odom1_differential: true
-    #imu0_nodelay: false
-    #
-    #imu0_queue_size: 5
-    #imu0_differential: false
+    odom1_differential: false 
+    odom1_queue_size: 10
+    odom1_nodelay: false
+    odom1_differential: false
+    odom1_relative: false
+
+    #odom1_pose_rejection_threshhold: 0.5
+    #odom1_twist_rejection_threshold: 0.25
+ 
+    imu0: "/imu/data"
+    imu0_config: [ false, false, false,
+              true, true, false, 
+              false, false, false,
+              true, false, false,
+              false, false, false ]
+     
+   
+    imu0_nodelay: false
+    
+    imu0_queue_size: 10
+    imu0_differential: true
     #imu0_pose_rejection_threshold: 0.8                 # Note the difference in parameter names
     #imu0_twist_rejection_threshold: 0.8                #
     #imu0_linear_acceleration_rejection_threshold: 0.8  #    
-    #imu0_remove_gravitational_acceleration: true 
+    imu0_remove_gravitational_acceleration: true 
 
 
-    twist0: "/zed2/zed_node/odom/twist"
-    twist0_config: [false, false, false,
-                   false, false, false, 
-                   true, true, true, 
-                   false, false, false,
-                   false, false, false]
-    
+    #twist0: "/zed2/zed_node/odom/twist"
+    #twist0_config: [false, false, false,
+    #               false, false, false, 
+    #               true, true, true, 
+    #               false, false, false,
+    #               false, false, false]
+    #
                    #                #twist0_differential: false 
     publish_tf: true 
     two_d_mode: true      
@@ -53,8 +91,8 @@ ekf_localization:
 
     print_diagnostics: true
 
-    process_noise_covariance: [1e-3, 0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
-                           0,    1e-3, 0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+    process_noise_covariance: [1., 0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
+                           0,    1., 0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
                            0,    0,    1e-3, 0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
                            0,    0,    0,    0.03, 0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
                            0,    0,    0,    0,    0.03, 0,    0,     0,     0,    0,    0,    0,    0,    0,    0,
@@ -70,21 +108,21 @@ ekf_localization:
                            0,    0,    0,    0,    0,    0,    0,     0,     0,    0,    0,    0,    0,    0,    0.015]
 
 
-    initial_estimate_covariance: [1e-9, 0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
-                              0,    1e-9, 0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
-                              0,    0,    1e-9, 0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
-                              0,    0,    0,    1e-9, 0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
-                              0,    0,    0,    0,    1e-9, 0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
-                              0,    0,    0,    0,    0,    1e-9, 0,    0,    0,    0,     0,     0,     0,    0,    0,
-                              0,    0,    0,    0,    0,    0,    1e-9, 0,    0,    0,     0,     0,     0,    0,    0,
-                              0,    0,    0,    0,    0,    0,    0,    1e-9, 0,    0,     0,     0,     0,    0,    0,
-                              0,    0,    0,    0,    0,    0,    0,    0,    1e-9, 0,     0,     0,     0,    0,    0,
-                              0,    0,    0,    0,    0,    0,    0,    0,    0,    1e-9,  0,     0,     0,    0,    0,
-                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     1e-9,  0,     0,    0,    0,
-                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     1e-9,  0,    0,    0,
-                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     1e-9, 0,    0,
-                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    1e-9, 0,
-                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    1e-9]
+    initial_estimate_covariance: [1., 0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    1., 0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    1., 0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    1., 0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    1., 0,    0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    1., 0,    0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    1., 0,    0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    1., 0,    0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    1., 0,     0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    1.,  0,     0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     1.,  0,     0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     1.,  0,    0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     1, 0,    0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    1., 0,
+                              0,    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,     0,     0,    0,    1.]
 
 
 

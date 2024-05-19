@@ -1,22 +1,25 @@
 <launch>
     <rosparam file="$(find gnc_localization)/launch/ekf_config.yaml"/>
-    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
+    <!--
+	<node pkg="robot_localization" type="ekf_localization_node" name="local_ekf_localization">
+        <param name="map_frame" value="map"/>
+	<param name="odom_frame" value="odom"/>
+        <param name="base_link_frame" value="base_link"/>
+        <param name="world_frame" value="map"/>
+    </node>
+    -->
+    <node pkg="robot_localization" type="ekf_localization_node" name="global_ekf_localization">
         <param name="map_frame" value="map"/>
 	<param name="odom_frame" value="odom"/>
         <param name="base_link_frame" value="base_link"/>
         <param name="world_frame" value="map"/>
     </node>
     <!-- Navsat Transform Node -->
+    <rosparam file="$(find gnc_localization)/launch/navsat_params.yaml"/>
     <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform">
-        <param name="frequency" value="1"/>
-	<param name="zero_altitude" value="true"/>
-	<param name="broadcast_utm_transform" value="true"/>
-	<param name="published_frame" value="map"/>
-	<param name="yaw_offset" value="0.0"/> <!-- -1.57 -->
-        <remap from="imu/data" to="/zed2/zed_node/imu/data"/>
-        <remap from="gps/fix" to="/gps/fix/time"/>
-        <remap from="odom" to="/odometry/filtered"/>
-	<param name="magnetic_declination_radians" value="0.166"/>
+	<remap from="gps/fix" to="/gps/fix/time"/>
+	<remap from="/imu/data" to="imu/data"/>
+	<remap from="odom" to="/odometry/filtered"/>
     </node>
 </launch>
 

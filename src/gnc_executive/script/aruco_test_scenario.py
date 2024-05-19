@@ -14,7 +14,7 @@ def main():
 
     with sm:
         smach.StateMachine.add('SpiralSearch', SpiralSearch(),
-                               transitions={'not_found':'SpiralSearch',
+                               transitions={'not_found':'not_detected',
                                             'found':'GateTraverse'}
                                )
         smach.StateMachine.add('GateTraverse', GateTraverse(),

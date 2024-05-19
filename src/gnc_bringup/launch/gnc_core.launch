@@ -1,6 +1,10 @@
 
 <launch>
 	<include file="$(find gnc_description)/launch/gnc_description.launch"/>
-        <node pkg="gnc_ground" type="launch_node_service.py" name="node_bootstrapper"/>
+	<node pkg="tegra_ros_diagnostics" type="tegrastats_node.py" name="xavier_diagnostics"/>
+        <node pkg="gnc_ground" type="kill_node_service.py" name="node_named_three_stage_atomic_hydrogen_bomb"/>
+	<node pkg="gnc_ground" type="launch_node_service.py" name="node_bootstrapper"/>
+	<include file="$(find node_alive)/launch/server.launch"/>
+
 	<include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
 </launch>

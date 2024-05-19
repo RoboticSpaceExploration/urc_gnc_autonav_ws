@@ -1,0 +1,4 @@
+---
+int32 id # coordinate ID
+geographic_msgs/GeoPointStamped position  # GPS coordinate
+int32 waypoint_type                       # Type of the waypoint

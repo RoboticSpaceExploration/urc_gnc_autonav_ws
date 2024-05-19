@@ -3,6 +3,8 @@ project(gnc_ground)
 
 find_package(catkin REQUIRED COMPONENTS
   cv_bridge
+  actionlib 
+  actionlib_msgs
   image_transport
   roscpp
   rospy
@@ -14,8 +16,8 @@ find_package(catkin REQUIRED COMPONENTS
 add_service_files(
 	FILES
 	LaunchNode.srv
+	KillNode.srv
 	)
-## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
 
@@ -56,15 +58,14 @@ add_service_files(
 # )
 
 ## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   Action1.action
-#   Action2.action
-# )
+add_action_files(
+  DIRECTORY action
+  FILES LaunchNode.action
+)
 
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
-  DEPENDENCIES
+  DEPENDENCIES actionlib_msgs std_msgs
   std_msgs
 )
 
@@ -100,7 +101,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES ros_camera
-   CATKIN_DEPENDS cv_bridge image_transport roscpp rospy sensor_msgs std_msgs message_runtime
+   CATKIN_DEPENDS actionlib actionlib_msgs cv_bridge image_transport roscpp rospy sensor_msgs std_msgs message_runtime
 #  DEPENDS system_lib
 )
 

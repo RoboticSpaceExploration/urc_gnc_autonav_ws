@@ -81,20 +81,27 @@ void DriveHwin::write()
         endpoint = od->endpoint.at(i);
         odrive_json = od->json.at(i);
 
-        uint32_t odrive_error0;
-        uint32_t odrive_error1;
-	/*
-        //readOdriveData(endpoint, odrive_json, string("axis0.error"), odrive_error0);
-        //readOdriveData(endpoint, odrive_json, string("axis1.error"), odrive_error1);
-        if (odrive_error0 != 0)
-        {
-            execOdriveFunc(endpoint, odrive_json, "axis0.clear_errors");
-        }
-        if (odrive_error1 != 0)
-        {
-            execOdriveFunc(endpoint, odrive_json, "axis1.clear_errors");
-        }
-	*/
+        float vel_estimate0;
+       	float vel_estimate1;
+        readOdriveData(endpoint, odrive_json, string("axis0.encoder.vel_estimate"), vel_estimate0);
+        readOdriveData(endpoint, odrive_json, string("axis1.encoder.vel_estimate"), vel_estimate1);
+	//ROS_INFO_STREAM("vel_estimate0: " << vel_estimate0);
+	//ROS_INFO_STREAM("vel_estimate1: " << vel_estimate1);
+	// right side wheels
+	//
+	float v = 0.3;
+	vel[2*i] = (double)(vel_estimate0 * v);
+	vel[2*i + 1] = (double)(vel_estimate1 * v);
+
+        float pos_estimate0;
+       	float pos_estimate1;
+        readOdriveData(endpoint, odrive_json, string("axis0.encoder.pos_estimate"), pos_estimate0);
+        readOdriveData(endpoint, odrive_json, string("axis1.encoder.pos_estimate"), pos_estimate1);
+	//ROS_INFO_STREAM("vel_estimate0: " << pos_estimate0);
+	//ROS_INFO_STREAM("vel_estimate1: " << pos_estimate1);
+	// right side wheels
+	pos[2*i] = (double)(pos_estimate0 * v); // 0.00962
+	pos[2*i + 1] = (double)(pos_estimate1 * v); // 0.00962
 
         // update watchdog
         // execOdriveFunc(endpoint, odrive_json, "axis0.watchdog_feed");

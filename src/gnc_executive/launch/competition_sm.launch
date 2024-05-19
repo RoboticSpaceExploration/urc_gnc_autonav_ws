@@ -1,0 +1,3 @@
+<launch>
+	<node pkg="gnc_executive" type="competition_scenario.py" name="competition_scenario" output="screen"/>
+</launch>

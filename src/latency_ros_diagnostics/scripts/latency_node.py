@@ -24,7 +24,7 @@ def main():
     latency_pub = rospy.Publisher('/network/xavier/latency', String, queue_size=10)
 
     # Start ping in a subprocess
-    proc = subprocess.Popen(['ping', 'xavier'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    proc = subprocess.Popen(['ping', '192.168.1.1'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
 
     try:
         parse_and_publish_ping(proc, latency_pub)

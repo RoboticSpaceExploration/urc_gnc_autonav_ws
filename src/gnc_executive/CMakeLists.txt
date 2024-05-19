@@ -18,6 +18,11 @@ add_service_files(
   FILES
   GetNextCoordinate.srv
   UpdateCoordinates.srv
+  StartMission.srv
+  SetNextWaypoint.srv
+  LaunchDetectService.srv
+  GetNextNoIncrement.srv
+  CancelMission.srv
   GPS2UTM.srv
  )
 

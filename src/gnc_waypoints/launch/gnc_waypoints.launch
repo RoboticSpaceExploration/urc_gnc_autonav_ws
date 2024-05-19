@@ -1,8 +1,8 @@
 <launch>
 	<node name="aruco_detect" pkg="aruco_detect" type="aruco_detect" output="screen">
-		<param name="dictionary" value="0"/>
+		<param name="dictionary" value="3"/>
 		<param name="publish_images" value="true"/>
-		<remap from="/camera" to="/zed2/zed_node/left_raw/image_raw_color"/>
+		<remap from="camera" to="/zed2/zed_node/left_raw/image_raw_color"/>
 		<remap from="camera_info" to="/zed2/zed_node/left_raw/camera_info"/>
 	</node>
 </launch>

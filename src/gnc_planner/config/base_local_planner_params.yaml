@@ -1,7 +1,7 @@
 base_local_planner: "base_local_planner/TrajectoryPlannerROS"
 base_global_planner: "navfn/NavfnROS"
 TrajectoryPlannerROS:
-   max_vel_x: 1.0
+   max_vel_x: 3.0
    min_vel_x: 0.2
    max_vel_theta: 1.0
    min_in_place_vel_theta: 0.25

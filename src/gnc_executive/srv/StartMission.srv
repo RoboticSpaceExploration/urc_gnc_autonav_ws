@@ -1,0 +1,3 @@
+---
+bool success  # indicate if the mission started successfully
+
